@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dotin Standard Job Profiles App v1.2 - Editable</title>
+  <style>
+    :root{--bg:#f5f7fb;--card:#fff;--text:#1f2937;--muted:#64748b;--line:#d8dee9;--primary:#17365d;--primary2:#1f4e79;--soft:#eaf2f8;--accent:#e2f0d9;--warn:#fff2cc;--danger:#fee2e2}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;line-height:1.9}
+    .app{display:grid;grid-template-columns:360px 1fr;min-height:100vh} aside{background:#0f2742;color:#fff;padding:22px;position:sticky;top:0;height:100vh;overflow:auto}
+    aside h1{font-size:18px;margin:0 0 8px;font-weight:700} aside p{font-size:12px;color:#cbd5e1;margin:0 0 18px}
+    label{display:block;font-size:12px;margin:14px 0 6px;color:#dbeafe} input,textarea,select{width:100%;border:1px solid #35506f;border-radius:10px;padding:9px 10px;font-family:inherit;background:#fff;color:#111827} textarea{min-height:120px;resize:vertical;direction:ltr;text-align:left;font-family:Consolas,monospace;font-size:12px}
+    button{border:0;border-radius:10px;padding:10px 12px;font-family:inherit;font-weight:700;cursor:pointer}.btn{background:#93c5fd;color:#0f172a;width:100%;margin-top:10px}.btn.secondary{background:#e2e8f0;color:#0f172a}.btn.danger{background:#fecaca;color:#7f1d1d}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hint{font-size:11px;color:#cbd5e1;margin-top:16px;border-top:1px solid rgba(255,255,255,.15);padding-top:12px}.status{font-size:12px;color:#bbf7d0;margin-top:10px;min-height:22px}.error{color:#fecaca}
+    main{padding:28px;overflow:auto}.toolbar{display:flex;gap:10px;justify-content:flex-end;margin-bottom:16px;flex-wrap:wrap}.toolbar button{background:#fff;border:1px solid var(--line);color:#17365d}.doc{background:var(--card);max-width:1180px;margin:0 auto;padding:34px;border-radius:18px;box-shadow:0 8px 30px rgba(15,39,66,.08)}
+    .doc h1{font-size:26px;text-align:center;margin:0 0 8px;color:#111827}.doc h2{font-size:21px;margin:30px 0 12px;color:#111827;border-bottom:2px solid var(--primary);padding-bottom:8px}.doc h3{font-size:17px;margin:20px 0 8px;color:#111827}.subtitle{text-align:center;font-size:18px;font-weight:700;color:#1f4e79;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;margin:12px 0 24px;background:#fff;table-layout:fixed}th,td{border:1px solid #333;padding:8px 10px;vertical-align:top;word-break:normal;font-size:13px}th{background:#f1f5f9;font-weight:700;text-align:center}.base th:first-child,.base td:first-child{width:28%;font-weight:700;background:#f8fafc}ul{margin-top:6px}.legend{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:12px 0 18px}.career{white-space:pre;direction:rtl;text-align:center;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:18px;font-family:Tahoma,Arial,sans-serif;overflow:auto}.note{background:#fff8e1;border-right:5px solid #f59e0b;padding:10px 14px;border-radius:8px;margin:12px 0;color:#4b5563}.eval th,.eval td{text-align:center;font-size:12px}.eval td:first-child,.eval th:first-child{font-weight:700;background:#f8fafc;text-align:right;width:180px}.empty{padding:40px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:14px}
+
+    .editor{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 30px rgba(15,39,66,.06);max-width:1180px;margin:0 auto 18px;padding:24px;display:none}
+    .editor.active{display:block}.editor h2{margin:0 0 12px;color:#17365d}.editor .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.editor label{color:#334155;font-size:12px;margin:8px 0 5px}.editor input,.editor textarea{border-color:#cbd5e1;background:#fff;color:#111827}.editor textarea{direction:rtl;text-align:right;font-family:Tahoma,Arial,sans-serif;min-height:85px}.editor textarea.code{direction:ltr;text-align:left;font-family:Consolas,monospace}.editor .wide{grid-column:1/-1}.editor .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.editor .actions button{background:#17365d;color:#fff}.editor .actions button.secondary{background:#e2e8f0;color:#111827}.mini{font-size:11px;color:#64748b;margin:4px 0 8px}.kbd{font-family:Consolas,monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:1px 5px}
+    @media print{body{background:#fff}.app{display:block}aside,.toolbar{display:none}.doc{box-shadow:none;border-radius:0;max-width:none;padding:0}main{padding:0}table{page-break-inside:auto}tr{page-break-inside:avoid;page-break-after:auto}h2{page-break-after:avoid}}
+    @media(max-width:900px){.app{grid-template-columns:1fr}aside{position:static;height:auto}.doc{padding:18px}main{padding:12px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <h1>اپ شناسنامه‌های استاندارد داتین</h1>
+    <p>v1.2 | ویرایش محتوا + ذخیره در دیتابیس JSON</p>
+
+    <label>جستجوی SubFamily یا Job Title</label>
+    <input id="searchBox" placeholder="مثلاً HR Generalists یا سرمایه انسانی" oninput="searchProfiles()" />
+    <label>انتخاب شناسنامه</label>
+    <select id="profileSelect" onchange="renderSelected()"></select>
+    <div class="row">
+      <button class="btn" onclick="renderSelected()">نمایش</button>
+      <button class="btn secondary" onclick="copyDocText()">کپی متن</button>
+    </div>
+    <div class="row">
+      <button class="btn" onclick="openEditor()">ویرایش محتوا</button>
+      <button class="btn secondary" onclick="saveDbToFile()">ذخیره فایل JSON</button>
+    </div>
+
+    <label>Import JSON Database</label>
+    <input id="fileInput" type="file" accept=".json,application/json" onchange="importFile(event)" />
+    <button class="btn secondary" onclick="downloadDb()">دانلود دیتابیس فعلی</button>
+    <button class="btn secondary" onclick="resetSampleDb()">بازگشت به دیتابیس نمونه</button>
+
+    <label>Paste JSON Profile / Database</label>
+    <textarea id="jsonPaste" placeholder='JSON را اینجا paste کنید'></textarea>
+    <button class="btn" onclick="importPastedJson()">افزودن / جایگزینی JSON</button>
+    <button class="btn danger" onclick="clearLocalDb()">حذف دیتابیس ذخیره‌شده مرورگر</button>
+    <div id="status" class="status"></div>
+
+    <div class="hint">
+      ساختار داده: آرایه profiles یا یک object با کلید profiles. هر profile می‌تواند type = subfamily یا jobtitle داشته باشد. دیتابیس در localStorage همین مرورگر ذخیره می‌شود.
+    </div>
+  </aside>
+
+  <main>
+    <div class="toolbar">
+      <button onclick="window.print()">Print / PDF</button>
+      <button onclick="downloadCurrentHtml()">دانلود HTML همین شناسنامه</button>
+      <button onclick="downloadCurrentJson()">دانلود JSON همین شناسنامه</button>
+    </div>
+    <section id="editor" class="editor"></section>
+    <section id="doc" class="doc"></section>
+  </main>
+</div>
+
+<script>
+const SAMPLE_DB = {
+  version: "1.0",
+  updatedAt: "2026-07-06",
+  profiles: [
+    {
+      id: "subfamily-hr-generalists-v1",
+      type: "subfamily",
+      title: "شناسنامه جامع زیرخانواده شغلی",
+      subFamilyFa: "متخصصان سرمایه انسانی",
+      subFamilyEn: "HR Generalists",
+      baseInfo: {
+        "خانواده شغلی (Job Family)": "Human Resources",
+        "زیرخانواده شغلی (Sub Family)": "HR Generalists",
+        "عنوان مرجع مرسر (Mercer Sub Family)": "HR Generalists",
+        "دامنه کاربرد": "کلیه مشاغل زیرخانواده متخصصان سرمایه انسانی",
+        "مسیر شغلی": "تخصصی و مدیریتی",
+        "عناوین شغلی (Job Titles)": "کارشناس سرمایه انسانی (L2)، کارشناس ارشد سرمایه انسانی (L3)، کارشناس عالی سرمایه انسانی (L4)، تسهیلگر روابط کارکنان (L4)، راهبر اجرایی سرمایه انسانی (L4)، راهبر سرمایه انسانی (HRBP) (L4)، کارشناس خبره سرمایه انسانی (L5)، مدیر واحد سرمایه انسانی (L6)"
+      },
+      commonComponents: {
+        purpose: "ایجاد ارزش برای کسب‌وکار از طریق اجرای اثربخش فرآیندهای سرمایه انسانی، ارائه خدمات و مشاوره تخصصی به مدیران و کارکنان، توسعه تجربه کارکنان و هم‌راستاسازی راهکارهای سرمایه انسانی با اهداف کسب‌وکار.",
+        mission: "ایجاد ارتباط مؤثر میان مدیران، کارکنان و سایر حوزه‌های سرمایه انسانی و تضمین اجرای اثربخش فرآیندهای سرمایه انسانی در سازمان.",
+        keyResponsibilities: ["اجرای و پشتیبانی فرآیندهای سرمایه انسانی", "همراهی مدیران در موضوعات مرتبط با کارکنان", "مشارکت در جذب، نگهداشت و توسعه کارکنان", "مشارکت در مدیریت عملکرد", "رسیدگی به مسائل و درخواست‌های کارکنان", "تحلیل و پایش شاخص‌های سرمایه انسانی", "بهبود تجربه کارکنان", "همکاری با سایر زیرخانواده‌های سرمایه انسانی"],
+        expectedOutputs: ["اجرای اثربخش فرآیندهای سرمایه انسانی", "ارتقای تجربه کارکنان", "افزایش رضایت مدیران و کارکنان", "کاهش مسائل و تعارضات کارکنان", "بهبود شاخص‌های سرمایه انسانی", "هم‌راستایی راهکارهای سرمایه انسانی با نیازهای کسب‌وکار"],
+        stakeholders: ["کارکنان", "مدیران", "واحدهای سازمانی", "سایر زیرخانواده‌های سرمایه انسانی"],
+        baseKnowledgeSkills: ["دانش فرآیندهای سرمایه انسانی", "آشنایی با قوانین کار و تأمین اجتماعی", "مهارت‌های ارتباطی و بین‌فردی", "تحلیل داده و حل مسئله", "تسهیلگری و مدیریت تعارض", "گزارش‌گیری و تحلیل شاخص‌ها"]
+      },
+      processMatrix: {
+        columns: ["کارشناس", "کارشناس ارشد", "کارشناس عالی", "خبره", "تسهیلگر روابط کارکنان", "راهبر اجرایی", "HRBP", "مدیر واحد"],
+        rows: [
+          {process:"جذب و ورود همکاران", values:["✔","✔","◐","—","—","—","◐","◐"]},
+          {process:"مدیریت عملکرد", values:["✔","✔","✔","✔","◐","—","✔","✔"]},
+          {process:"توسعه و نگهداشت کارکنان", values:["✔","✔","✔","✔","◐","—","✔","✔"]},
+          {process:"پشتیبانی مدیران", values:["✔","✔","✔","✔","◐","◐","✔","✔"]},
+          {process:"روابط کارکنان", values:["◐","✔","✔","✔","✔","—","✔","✔"]},
+          {process:"رسیدگی به مسائل کارکنان", values:["◐","✔","✔","✔","✔","◐","✔","✔"]},
+          {process:"تحلیل و پایش شاخص‌های سرمایه انسانی", values:["—","✔","✔","✔","◐","✔","✔","✔"]},
+          {process:"مدیریت ریسک‌های سرمایه انسانی", values:["—","◐","✔","✔","◐","✔","✔","✔"]},
+          {process:"تسهیل اجرای فرآیندهای اجرایی و پشتیبان", values:["✔","◐","✔","—","◐","✔","◐","—"]},
+          {process:"شناسایی و رفع گلوگاه‌های اجرایی", values:["✔","◐","✔","—","◐","✔","◐","—"]},
+          {process:"سیاست‌گذاری و توسعه راهکارهای سرمایه انسانی", values:["—","—","◐","✔","—","—","✔","✔"]}
+        ]
+      },
+      evaluationProfile: {
+        columns: ["کارشناس (L2)", "کارشناس ارشد (L3)", "کارشناس عالی (L4)", "خبره (L5)", "تسهیلگر (L4)", "راهبر اجرایی (L4)", "HRBP (L4)", "مدیر واحد (L6)"],
+        rows: [
+          {factor:"اثرگذاری (Impact)", values:["Operational","Operational → Tactical","Tactical","Tactical → Strategic","Operational → Tactical","Tactical","Tactical → Strategic","Strategic"]},
+          {factor:"نقش در نتایج (Contribution)", values:["Some","Some → Direct","Direct","Direct → Significant","Direct","Direct → Significant","Significant","Major"]},
+          {factor:"تعاملات (Communication)", values:["Adapt & Exchange","Influence","Influence → Negotiate","Negotiate","Influence","Influence → Negotiate","Negotiate","Long-term Negotiate"]},
+          {factor:"فضای تعامل (Frame)", values:["Internal Shared Interests","Internal Shared Interests","Internal Shared Interests","Internal / External Divergent Interests","Internal Shared Interests","Internal Shared Interests","Internal / External Divergent Interests","External Divergent Interests"]},
+          {factor:"نوآوری (Innovation)", values:["Check","Check → Modify","Modify → Improve","Improve → Create","Modify","Improve","Improve → Create","Create"]},
+          {factor:"پیچیدگی (Complexity)", values:["Defined","Defined → Difficult","Difficult → Complex","Complex → Multi-dimensional","Difficult","Complex","Complex → Multi-dimensional","Multi-dimensional"]},
+          {factor:"دانش (Knowledge)", values:["Broad Job Knowledge","Broad Job Knowledge → Expertise","Expertise","Expertise → Recognized Expert","Expertise","Expertise","Expertise → Recognized Expert","Functional / Organizational Leader"]},
+          {factor:"راهبری (Teams)", values:["Team Member","Team Member","Team Member → Team Leader","Team Leader → Functional Leader","Team Member","Team Leader","Team Leader","Teams Manager"]},
+          {factor:"دامنه اثر (Breadth)", values:["Functional","Functional → Multi-functional","Multi-functional","Multi-functional → Organizational","Multi-functional","Multi-functional","Organizational","Enterprise"]},
+          {factor:"اختیار عمل (شاخص داتینی)", values:["اجرای فعالیت‌ها در چارچوب رویه‌ها، دستورالعمل‌ها و استانداردهای مصوب","اعمال قضاوت حرفه‌ای در اجرای فرآیندها و ارائه پیشنهادهای تخصصی","تصمیم‌گیری تخصصی در چارچوب حوزه مسئولیت","تصمیم‌گیری تخصصی و ایفای نقش مرجع حرفه‌ای","قضاوت حرفه‌ای در مدیریت روابط کارکنان","تصمیم‌گیری تخصصی در هماهنگی و راهبری اجرای فرآیندها","تصمیم‌گیری تخصصی در همراهی مدیران و مدیریت ریسک‌های سرمایه انسانی","تصمیم‌گیری راهبردی در چارچوب اهداف، سیاست‌ها و اولویت‌های سازمان"]}
+        ]
+      },
+      careerPath: "کارشناس سرمایه انسانی (L2)\n↓\nکارشناس ارشد سرمایه انسانی (L3)\n↓\nکارشناس عالی سرمایه انسانی (L4)\n↙        ↓        ↘\nتسهیلگر روابط کارکنان (L4)    راهبر اجرایی سرمایه انسانی (L4)    راهبر سرمایه انسانی (HRBP) (L4)\n↘        ↓        ↙\nکارشناس خبره سرمایه انسانی (L5)\n↓\nمدیر واحد سرمایه انسانی (L6)"
+    },
+    {
+      id: "jobtitle-hr-generalist-l2-v1",
+      type: "jobtitle",
+      title: "شناسنامه اختصاصی Job Title",
+      jobTitle: "کارشناس سرمایه انسانی",
+      level: "L2",
+      baseInfo: {
+        "خانواده شغلی (Job Family)": "Human Resources",
+        "زیرخانواده شغلی (Sub Family)": "HR Generalists",
+        "سطح شغلی (Job Level)": "L2",
+        "عنوان شغلی داتین": "کارشناس سرمایه انسانی",
+        "عنوان مرجع مرسر": "HR Generalist / Human Resources Generalist",
+        "مسیر شغلی": "تخصصی"
+      },
+      relationToSubFamily: "این شغل کلیه مولفه‌های مشترک زیرخانواده HR Generalists را دارا بوده و موارد زیر، ویژگی‌ها، مسئولیت‌ها و الزامات اختصاصی این عنوان شغلی را تشکیل می‌دهد.",
+      distinctiveComponents: {
+        roleFocus: "تمرکز این نقش بر اجرای فرآیندهای روزمره سرمایه انسانی، ارائه خدمات به کارکنان و مدیران، پیگیری اقدامات مرتبط با چرخه عمر کارکنان و اطمینان از اجرای صحیح و به‌موقع فرآیندهای سرمایه انسانی در حوزه تحت پوشش است.",
+        specificResponsibilities: ["اجرای و پیگیری فرآیند جذب، ورود و استقرار همکاران جدید", "پشتیبانی از اجرای فرآیند مدیریت عملکرد", "پاسخگویی و رسیدگی به درخواست‌های کارکنان و مدیران", "پیگیری اقدامات مرتبط با توسعه، جابه‌جایی و خروج کارکنان", "تهیه گزارش‌ها و اطلاعات مورد نیاز حوزه سرمایه انسانی", "شناسایی و انعکاس مسائل و گلوگاه‌های مرتبط با کارکنان به سطوح بالاتر", "مشارکت در اجرای برنامه‌های نگهداشت و بهبود تجربه کارکنان"]
+      },
+      processes: [
+        {process:"جذب و ورود همکاران", responsibilityType:"اصلی"},
+        {process:"مدیریت عملکرد", responsibilityType:"اصلی"},
+        {process:"توسعه و نگهداشت کارکنان", responsibilityType:"اصلی"},
+        {process:"روابط کارکنان", responsibilityType:"اصلی"},
+        {process:"پاسخگویی به کارکنان و مدیران", responsibilityType:"اصلی"},
+        {process:"حل مسائل جاری کارکنان", responsibilityType:"اصلی"},
+        {process:"تحلیل و پایش شاخص‌های سرمایه انسانی", responsibilityType:"مشارکتی"},
+        {process:"مدیریت ریسک‌های سرمایه انسانی", responsibilityType:"مشارکتی"},
+        {process:"راهبری برنامه‌های سرمایه انسانی", responsibilityType:"مشارکتی"},
+        {process:"سیاست‌گذاری سرمایه انسانی", responsibilityType:"خارج از دامنه"}
+      ],
+      baselineEvaluationProfile: [
+        {factor:"اثرگذاری (Impact)", baseline:"Operational"},
+        {factor:"نقش در نتایج (Contribution)", baseline:"Some"},
+        {factor:"تعاملات (Communication)", baseline:"Adapt & Exchange"},
+        {factor:"فضای تعامل (Frame)", baseline:"Internal Shared Interests"},
+        {factor:"نوآوری (Innovation)", baseline:"Check"},
+        {factor:"پیچیدگی (Complexity)", baseline:"Defined"},
+        {factor:"دانش (Knowledge)", baseline:"Broad Job Knowledge"},
+        {factor:"راهبری (Teams)", baseline:"Team Member"},
+        {factor:"دامنه اثر (Breadth)", baseline:"Functional"},
+        {factor:"اختیار عمل (شاخص داتینی)", baseline:"اجرای فعالیت‌ها در چارچوب رویه‌ها، دستورالعمل‌ها و استانداردهای مصوب"}
+      ],
+      requirements: {
+        education: "حداقل مدرک کارشناسی در رشته‌های مدیریت، منابع انسانی، روان‌شناسی، مهندسی صنایع یا سایر رشته‌های مرتبط.",
+        experience: "حداقل ۲ سال تجربه مرتبط در حوزه سرمایه انسانی یا فرآیندهای اداری و سازمانی.",
+        knowledge: ["آشنایی با فرآیندهای سرمایه انسانی", "آشنایی با قوانین کار و تأمین اجتماعی", "مهارت گزارش‌گیری و پیگیری", "آشنایی با ابزارهای اداری و سامانه‌های منابع انسانی"],
+        competencies: ["ارتباط مؤثر", "پیگیری و مسئولیت‌پذیری", "دقت و نظم", "حل مسئله", "کار تیمی", "یادگیری مستمر"]
+      }
+    }
+  ]
+};
+
+let db = loadDb();
+let currentProfile = null;
+
+function loadDb(){
+  try{ const saved = localStorage.getItem('dotinJobProfilesDb'); return saved ? JSON.parse(saved) : structuredClone(SAMPLE_DB); }
+  catch(e){ return structuredClone(SAMPLE_DB); }
+}
+function saveDb(){ localStorage.setItem('dotinJobProfilesDb', JSON.stringify(db)); }
+function setStatus(msg, isError=false){ const el=document.getElementById('status'); el.textContent=msg; el.className='status'+(isError?' error':''); }
+function normalizeProfiles(obj){
+  if(Array.isArray(obj)) return {version:'custom', updatedAt:new Date().toISOString().slice(0,10), profiles:obj};
+  if(obj && Array.isArray(obj.profiles)) return obj;
+  if(obj && (obj.type==='subfamily'||obj.type==='jobtitle')) return {version:'custom', updatedAt:new Date().toISOString().slice(0,10), profiles:[obj]};
+  throw new Error('فرمت JSON معتبر نیست. باید profiles[] یا یک profile داشته باشد.');
+}
+function mergeProfiles(newDb){
+  const map = new Map((db.profiles||[]).map(p=>[p.id || `${p.type}-${p.subFamilyEn||p.jobTitle||Math.random()}`, p]));
+  (newDb.profiles||[]).forEach(p=>{ if(!p.id) p.id = `${p.type}-${p.subFamilyEn||p.jobTitle||Date.now()}`; map.set(p.id,p); });
+  db = {...db, profiles:[...map.values()], updatedAt:new Date().toISOString().slice(0,10)};
+  saveDb(); refreshSelect();
+}
+function resetSampleDb(){ db=structuredClone(SAMPLE_DB); saveDb(); refreshSelect(); setStatus('دیتابیس نمونه بارگذاری شد.'); }
+function clearLocalDb(){ localStorage.removeItem('dotinJobProfilesDb'); db=structuredClone(SAMPLE_DB); refreshSelect(); setStatus('دیتابیس مرورگر حذف و نمونه پیش‌فرض نمایش داده شد.'); }
+function importPastedJson(){
+  try{ const obj=JSON.parse(document.getElementById('jsonPaste').value); mergeProfiles(normalizeProfiles(obj)); setStatus('JSON با موفقیت اضافه/جایگزین شد.'); }
+  catch(e){ setStatus(e.message, true); }
+}
+function importFile(event){
+  const file = event.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{ try{ mergeProfiles(normalizeProfiles(JSON.parse(reader.result))); setStatus('فایل دیتابیس با موفقیت بارگذاری شد.'); } catch(e){ setStatus(e.message,true); } };
+  reader.readAsText(file,'utf-8');
+}
+function profileLabel(p){ return p.type==='subfamily' ? `جامع | ${p.subFamilyFa || ''} (${p.subFamilyEn || ''})` : `اختصاصی | ${p.jobTitle || ''} (${p.level || ''})`; }
+function matches(p, q){ const s=JSON.stringify(p).toLowerCase(); return !q || s.includes(q.toLowerCase()); }
+function searchProfiles(){ refreshSelect(); }
+function refreshSelect(){
+  const q=document.getElementById('searchBox').value.trim(); const sel=document.getElementById('profileSelect'); sel.innerHTML='';
+  const list=(db.profiles||[]).filter(p=>matches(p,q));
+  list.forEach(p=>{ const opt=document.createElement('option'); opt.value=p.id; opt.textContent=profileLabel(p); sel.appendChild(opt); });
+  if(list.length){ sel.value=list[0].id; renderSelected(); } else { document.getElementById('doc').innerHTML='<div class="empty">موردی پیدا نشد.</div>'; currentProfile=null; }
+}
+function renderSelected(){ const id=document.getElementById('profileSelect').value; currentProfile=(db.profiles||[]).find(p=>p.id===id); renderProfile(currentProfile); }
+function escapeHtml(s){ return String(s ?? '').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+function listHtml(items){ return `<ul>${(items||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul>`; }
+function tableHtml(headers, rows, cls=''){
+  return `<table class="${cls}"><thead><tr>${headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+function renderProfile(p){
+  if(!p){ document.getElementById('doc').innerHTML='<div class="empty">یک شناسنامه انتخاب کنید.</div>'; return; }
+  document.getElementById('doc').innerHTML = p.type==='subfamily' ? renderSubfamily(p) : renderJobTitle(p);
+}
+function renderSubfamily(p){
+  const baseRows = Object.entries(p.baseInfo||{}).map(([k,v])=>[escapeHtml(k), escapeHtml(v)]);
+  const c=p.commonComponents||{};
+  const proc=p.processMatrix||{columns:[],rows:[]};
+  const procRows=(proc.rows||[]).map(r=>[escapeHtml(r.process), ...(r.values||[]).map(escapeHtml)]);
+  const evalp=p.evaluationProfile||{columns:[],rows:[]};
+  const evalRows=(evalp.rows||[]).map(r=>[escapeHtml(r.factor), ...(r.values||[]).map(escapeHtml)]);
+  return `
+    <h1>${escapeHtml(p.title || 'شناسنامه جامع زیرخانواده شغلی')}</h1>
+    <div class="subtitle">${escapeHtml(p.subFamilyFa||'')} (${escapeHtml(p.subFamilyEn||'')})</div>
+    <h2>1- مشخصات پایه</h2>
+    ${tableHtml(['مولفه','شرح'], baseRows, 'base')}
+    <h2>2- مولفه‌های مشترک زیرخانواده شغلی</h2>
+    <h3>هدف</h3><p>${escapeHtml(c.purpose||'')}</p>
+    <h3>مأموریت</h3><p>${escapeHtml(c.mission||'')}</p>
+    <h3>مسئولیت‌های کلیدی مشترک</h3>${listHtml(c.keyResponsibilities)}
+    <h3>خروجی‌های مورد انتظار</h3>${listHtml(c.expectedOutputs)}
+    <h3>ذی‌نفعان اصلی</h3>${listHtml(c.stakeholders)}
+    <h3>دانش و مهارت‌های پایه</h3>${listHtml(c.baseKnowledgeSkills)}
+    <h2>3- ماتریس فرآیندها و مسئولیت‌های اصلی</h2>
+    <div class="legend">راهنمای علائم: ✔ مالک / مجری اصلی &nbsp;&nbsp; ◐ مشارکت‌کننده &nbsp;&nbsp; — خارج از دامنه مسئولیت</div>
+    ${tableHtml(['فرآیندهای اصلی', ...(proc.columns||[])], procRows)}
+    <h2>4- پروفایل ارزش‌یابی شغل (Job Evaluation Profile)</h2>
+    <div class="note">مقادیر این جدول به‌صورت بازه (→) نمایش داده می‌شوند. سطر اول جدول سطح شغلی داتین است. اختیار عمل شاخص داتینی است و مولفه مرسری محسوب نمی‌شود.</div>
+    ${tableHtml(['مولفه ارزش‌یابی', ...(evalp.columns||[])], evalRows, 'eval')}`;
+}
+function renderJobTitle(p){
+  const baseRows = Object.entries(p.baseInfo||{}).map(([k,v])=>[escapeHtml(k), escapeHtml(v)]);
+  const d=p.distinctiveComponents||{};
+  const procRows=(p.processes||[]).map(r=>[escapeHtml(r.process), escapeHtml(r.responsibilityType)]);
+  const profRows=(p.baselineEvaluationProfile||[]).map(r=>[escapeHtml(r.factor), escapeHtml(r.baseline)]);
+  const req=p.requirements||{};
+  return `
+    <h1>${escapeHtml(p.title || 'شناسنامه اختصاصی Job Title')}</h1>
+    <div class="subtitle">${escapeHtml(p.jobTitle||'')} (${escapeHtml(p.level||'')})</div>
+    <h2>1- اطلاعات پایه شغل</h2>${tableHtml(['مولفه','مقدار'], baseRows, 'base')}
+    <h2>2- ارتباط با شناسنامه جامع Sub Family</h2><p>${escapeHtml(p.relationToSubFamily||'')}</p>
+    <h2>3- مولفه‌های متمایزکننده Job Title</h2>
+    <h3>تمرکز اختصاصی نقش</h3><p>${escapeHtml(d.roleFocus||'')}</p>
+    <h3>مسئولیت‌های اختصاصی</h3>${listHtml(d.specificResponsibilities)}
+    <h3>فرآیندها / وظایف اصلی شغل</h3>${tableHtml(['فرآیند / وظیفه','نوع مسئولیت'], procRows)}
+    <h2>4- پروفایل مبنای ارزش‌یابی شغل (Baseline Job Evaluation Profile)</h2>
+    <div class="note">مقادیر این جدول فقط سطح مبنای احراز این عنوان شغلی را نشان می‌دهد و هیچ بازه‌ای در آن درج نمی‌شود. اختیار عمل شاخص داتینی است و آخرین سطر جدول قرار می‌گیرد.</div>
+    ${tableHtml(['مولفه ارزش‌یابی','سطح مبنا'], profRows, 'base')}
+    <h2>5- شرایط احراز شغل</h2>
+    <h3>تحصیلات</h3><p>${escapeHtml(req.education||'')}</p>
+    <h3>تجربه</h3><p>${escapeHtml(req.experience||'')}</p>
+    <h3>دانش تخصصی</h3>${listHtml(req.knowledge)}
+    <h3>شایستگی‌های کلیدی</h3>${listHtml(req.competencies)}`;
+}
+function copyDocText(){
+  const el=document.getElementById('doc'); const range=document.createRange(); range.selectNode(el); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+  try{ document.execCommand('copy'); setStatus('محتوای شناسنامه کپی شد.'); } catch(e){ setStatus('کپی خودکار انجام نشد؛ دستی کپی کنید.', true); }
+  sel.removeAllRanges();
+}
+function download(filename, text, type='text/plain'){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=filename; a.click(); URL.revokeObjectURL(a.href); }
+function downloadDb(){ download('dotin_job_profiles_db.json', JSON.stringify(db,null,2), 'application/json'); }
+function downloadCurrentJson(){ if(!currentProfile) return; download((currentProfile.id||'profile')+'.json', JSON.stringify(currentProfile,null,2), 'application/json'); }
+
+function arrToLines(arr){ return (arr||[]).join('\n'); }
+function linesToArr(s){ return String(s||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean); }
+function objToKvLines(obj){ return Object.entries(obj||{}).map(([k,v])=>`${k}\t${v}`).join('\n'); }
+function kvLinesToObj(s){
+  const out={};
+  String(s||'').split(/\r?\n/).forEach(line=>{
+    if(!line.trim()) return;
+    const parts=line.split('\t');
+    if(parts.length>=2){ const k=parts.shift().trim(); out[k]=parts.join('\t').trim(); }
+    else { const idx=line.indexOf(':'); if(idx>0) out[line.slice(0,idx).trim()]=line.slice(idx+1).trim(); }
+  });
+  return out;
+}
+function matrixToTsv(matrix){
+  if(!matrix) return '';
+  const cols=matrix.columns||[];
+  const rows=(matrix.rows||[]).map(r=>[r.process||r.factor||'', ...(r.values||[])].join('\t'));
+  return ['عنوان/مولفه\t'+cols.join('\t'), ...rows].join('\n');
+}
+function tsvToMatrix(s, keyName){
+  const lines=String(s||'').split(/\r?\n/).filter(x=>x.trim());
+  if(!lines.length) return {columns:[],rows:[]};
+  const head=lines[0].split('\t').map(x=>x.trim());
+  const columns=head.slice(1);
+  const rows=lines.slice(1).map(line=>{
+    const p=line.split('\t');
+    const first=(p.shift()||'').trim();
+    return {[keyName]: first, values:p.map(x=>x.trim())};
+  });
+  return {columns,rows};
+}
+function rowsToTsv(rows, cols){
+  return [cols.join('\t'), ...(rows||[]).map(r=>cols.map(c=>r[c]??'').join('\t'))].join('\n');
+}
+function tsvToRows(s, cols){
+  const lines=String(s||'').split(/\r?\n/).filter(x=>x.trim());
+  const start = lines.length && lines[0].split('\t')[0].trim()===cols[0] ? 1 : 0;
+  return lines.slice(start).map(line=>{
+    const p=line.split('\t'); const o={}; cols.forEach((c,i)=>o[c]=(p[i]||'').trim()); return o;
+  });
+}
+function editInput(id,label,value='',wide=false){ return `<div class="${wide?'wide':''}"><label>${escapeHtml(label)}</label><input id="${id}" value="${escapeHtml(value)}"></div>`; }
+function editText(id,label,value='',wide=true,code=false,hint=''){
+  return `<div class="${wide?'wide':''}"><label>${escapeHtml(label)}</label>${hint?`<div class="mini">${hint}</div>`:''}<textarea id="${id}" class="${code?'code':''}">${escapeHtml(value)}</textarea></div>`;
+}
+function openEditor(){
+  if(!currentProfile){ setStatus('ابتدا یک شناسنامه انتخاب کنید.', true); return; }
+  const e=document.getElementById('editor');
+  const p=currentProfile;
+  let html=`<h2>ویرایش محتوای شناسنامه</h2><div class="mini">پس از ویرایش، روی «ذخیره در دیتابیس» بزنید. تغییرات در همین دیتابیس مرورگر ذخیره می‌شود و برای ثبت در فایل، «ذخیره فایل JSON» را بزنید.</div>`;
+  if(p.type==='subfamily'){
+    const c=p.commonComponents||{};
+    html+=`<div class="grid">`+
+      editInput('ed_subFamilyFa','عنوان فارسی SubFamily',p.subFamilyFa||'')+
+      editInput('ed_subFamilyEn','عنوان انگلیسی SubFamily',p.subFamilyEn||'')+
+      editText('ed_baseInfo','مشخصات پایه',objToKvLines(p.baseInfo),true,false,'هر ردیف: عنوان، سپس Tab، سپس مقدار')+
+      editText('ed_purpose','هدف',c.purpose||'')+
+      editText('ed_mission','مأموریت',c.mission||'')+
+      editText('ed_keyResponsibilities','مسئولیت‌های کلیدی مشترک',arrToLines(c.keyResponsibilities),true,false,'هر مورد در یک خط')+
+      editText('ed_expectedOutputs','خروجی‌های مورد انتظار',arrToLines(c.expectedOutputs),true,false,'هر مورد در یک خط')+
+      editText('ed_stakeholders','ذی‌نفعان اصلی',arrToLines(c.stakeholders),true,false,'هر مورد در یک خط')+
+      editText('ed_baseKnowledgeSkills','دانش و مهارت‌های پایه',arrToLines(c.baseKnowledgeSkills),true,false,'هر مورد در یک خط')+
+      editText('ed_processMatrix','ماتریس فرآیندها',matrixToTsv(p.processMatrix),true,true,'فرمت TSV: ستون‌ها با Tab جدا شوند. ردیف اول عنوان ستون‌هاست.')+
+      editText('ed_evaluationProfile','پروفایل ارزش‌یابی شغل',matrixToTsv(p.evaluationProfile),true,true,'فرمت TSV: مولفه و مقادیر هر شغل با Tab جدا شوند.')+
+      editText('ed_careerPath','مسیر رشد شغلی',p.careerPath||'',true,false)+
+      `</div>`;
+  } else {
+    const d=p.distinctiveComponents||{}, r=p.requirements||{};
+    html+=`<div class="grid">`+
+      editInput('ed_jobTitle','عنوان شغلی',p.jobTitle||'')+
+      editInput('ed_level','سطح شغلی',p.level||'')+
+      editText('ed_baseInfo','اطلاعات پایه',objToKvLines(p.baseInfo),true,false,'هر ردیف: عنوان، سپس Tab، سپس مقدار')+
+      editText('ed_relation','ارتباط با شناسنامه جامع',p.relationToSubFamily||'')+
+      editText('ed_roleFocus','تمرکز اختصاصی نقش',d.roleFocus||'')+
+      editText('ed_specificResponsibilities','مسئولیت‌های اختصاصی',arrToLines(d.specificResponsibilities),true,false,'هر مورد در یک خط')+
+      editText('ed_processes','فرآیندها / وظایف اصلی',rowsToTsv(p.processes,['process','responsibilityType']),true,true,'فرمت TSV: process و responsibilityType')+
+      editText('ed_baseline','پروفایل مبنای ارزش‌یابی',rowsToTsv(p.baselineEvaluationProfile,['factor','baseline']),true,true,'فرمت TSV: factor و baseline')+
+      editText('ed_education','تحصیلات',r.education||'')+
+      editText('ed_experience','تجربه',r.experience||'')+
+      editText('ed_knowledge','دانش تخصصی',arrToLines(r.knowledge),true,false,'هر مورد در یک خط')+
+      editText('ed_competencies','شایستگی‌های کلیدی',arrToLines(r.competencies),true,false,'هر مورد در یک خط')+
+      `</div>`;
+  }
+  html+=`<div class="actions"><button onclick="saveEditor()">ذخیره در دیتابیس</button><button class="secondary" onclick="closeEditor()">بستن</button><button class="secondary" onclick="downloadDb()">دانلود دیتابیس فعلی</button></div>`;
+  e.innerHTML=html; e.classList.add('active'); e.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function closeEditor(){ document.getElementById('editor').classList.remove('active'); }
+function val(id){ return document.getElementById(id)?.value || ''; }
+function saveEditor(){
+  if(!currentProfile) return;
+  const p=structuredClone(currentProfile);
+  try{
+    if(p.type==='subfamily'){
+      p.subFamilyFa=val('ed_subFamilyFa'); p.subFamilyEn=val('ed_subFamilyEn');
+      p.baseInfo=kvLinesToObj(val('ed_baseInfo'));
+      p.commonComponents={purpose:val('ed_purpose'), mission:val('ed_mission'), keyResponsibilities:linesToArr(val('ed_keyResponsibilities')), expectedOutputs:linesToArr(val('ed_expectedOutputs')), stakeholders:linesToArr(val('ed_stakeholders')), baseKnowledgeSkills:linesToArr(val('ed_baseKnowledgeSkills'))};
+      p.processMatrix=tsvToMatrix(val('ed_processMatrix'),'process');
+      p.evaluationProfile=tsvToMatrix(val('ed_evaluationProfile'),'factor');
+      p.careerPath=val('ed_careerPath');
+    } else {
+      p.jobTitle=val('ed_jobTitle'); p.level=val('ed_level');
+      p.baseInfo=kvLinesToObj(val('ed_baseInfo'));
+      p.relationToSubFamily=val('ed_relation');
+      p.distinctiveComponents={roleFocus:val('ed_roleFocus'), specificResponsibilities:linesToArr(val('ed_specificResponsibilities'))};
+      p.processes=tsvToRows(val('ed_processes'),['process','responsibilityType']);
+      p.baselineEvaluationProfile=tsvToRows(val('ed_baseline'),['factor','baseline']);
+      p.requirements={education:val('ed_education'), experience:val('ed_experience'), knowledge:linesToArr(val('ed_knowledge')), competencies:linesToArr(val('ed_competencies'))};
+    }
+    p.updatedAt=new Date().toISOString();
+    const idx=(db.profiles||[]).findIndex(x=>x.id===currentProfile.id);
+    if(idx>=0) db.profiles[idx]=p; else db.profiles.push(p);
+    db.updatedAt=new Date().toISOString().slice(0,10);
+    currentProfile=p; saveDb(); refreshSelect(); document.getElementById('profileSelect').value=p.id; renderProfile(p); openEditor(); setStatus('تغییرات در دیتابیس مرورگر ذخیره شد. برای ذخیره در فایل، دکمه ذخیره فایل JSON را بزنید.');
+  } catch(e){ setStatus('خطا در ذخیره: '+e.message,true); }
+}
+async function saveDbToFile(){
+  const text=JSON.stringify(db,null,2);
+  if(window.showSaveFilePicker){
+    try{
+      const handle=await window.showSaveFilePicker({suggestedName:'dotin_job_profiles_db.json',types:[{description:'JSON Database',accept:{'application/json':['.json']}}]});
+      const writable=await handle.createWritable(); await writable.write(text); await writable.close(); setStatus('فایل JSON ذخیره شد.'); return;
+    }catch(e){ if(e.name==='AbortError') return; }
+  }
+  downloadDb(); setStatus('به دلیل محدودیت مرورگر، فایل JSON دانلود شد.');
+}
+
+function downloadCurrentHtml(){ if(!currentProfile) return; const html='<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><title>'+escapeHtml(profileLabel(currentProfile))+'</title><style>'+document.querySelector('style').textContent+'</style></head><body><main><section class="doc">'+document.getElementById('doc').innerHTML+'</section></main></body></html>'; download((currentProfile.id||'profile')+'.html', html, 'text/html'); }
+
+refreshSelect();
+</script>
+</body>
+</html>
