@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>استودیو ارزش‌یابی شغل داتین - نسخه ۴.۴ - سطوح شغلی داتین</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e6eaf0;
+      --blue:#1f4e79;--blue2:#2d6ca2;--green:#138a5e;--amber:#b7791f;--red:#b42318;
+      --soft-blue:#e8f1fb;--soft-green:#e9f7ef;--soft-amber:#fff4db;--soft-red:#fee4e2;
+      --shadow:0 10px 25px rgba(16,24,40,.08);--radius:18px;
+    }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif;line-height:1.7}
+    header{background:linear-gradient(135deg,var(--blue),#15395b);color:white;padding:22px 28px;position:sticky;top:0;z-index:10;box-shadow:var(--shadow)}
+    header h1{margin:0;font-size:22px} header p{margin:4px 0 0;color:#dcecff;font-size:13px}
+    .app{display:grid;grid-template-columns:285px 1fr;gap:18px;padding:18px;max-width:1500px;margin:auto}
+    aside{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;height:calc(100vh - 116px);position:sticky;top:98px;overflow:auto}
+    main{min-width:0}.nav button{width:100%;border:0;background:transparent;text-align:right;padding:12px 14px;border-radius:12px;cursor:pointer;color:var(--ink);font-weight:700;margin:3px 0}
+    .nav button:hover{background:#f1f5f9}.nav button.active{background:var(--soft-blue);color:var(--blue)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:18px}
+    .card h2{margin:0 0 10px;font-size:20px}.card h3{margin:20px 0 8px;font-size:16px}.hint{font-size:13px;color:var(--muted)}
+    .grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    label{display:block;font-size:13px;font-weight:700;margin:0 0 4px;color:#344054} input,select,textarea{width:100%;border:1px solid #cfd7e2;border-radius:10px;background:white;padding:10px 11px;font-family:inherit;font-size:14px;color:var(--ink)}
+    textarea{min-height:74px;resize:vertical}.btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.btn{border:0;border-radius:11px;padding:10px 14px;font-family:inherit;font-weight:800;cursor:pointer;background:var(--blue);color:white}.btn:hover{filter:brightness(.96)}
+    .btn.secondary{background:#eef2f6;color:#1f2937}.btn.green{background:var(--green)}.btn.red{background:var(--red)}.btn.amber{background:var(--amber)}.btn.small{padding:7px 10px;font-size:12px;border-radius:9px}
+    table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:white}th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:right;vertical-align:top;font-size:13px}th{background:#f1f6fc;color:#17365d;font-weight:900;position:sticky;top:0;z-index:1}tr:last-child td{border-bottom:0}.nowrap{white-space:nowrap}.ltr{direction:ltr;text-align:left}.muted{color:var(--muted)}
+    .pill{display:inline-block;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:800;background:#eef2f6}.pill.blue{background:var(--soft-blue);color:var(--blue)}.pill.green{background:var(--soft-green);color:var(--green)}.pill.amber{background:var(--soft-amber);color:#8a5a00}.pill.red{background:var(--soft-red);color:var(--red)}
+    .scorebox{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:14px}.metric .name{font-size:12px;color:var(--muted)}.metric .val{font-size:24px;font-weight:900;margin-top:4px;color:var(--blue)}
+    .question{border:1px solid var(--line);border-radius:16px;padding:13px;margin:10px 0;background:#fff}.qhead{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}.qtitle{font-weight:900}.hidden{display:none!important}.scroll{overflow:auto;max-height:650px}.danger-zone{border:1px dashed #f0a6a1;background:#fff8f7}.ok{color:var(--green);font-weight:900}.bad{color:var(--red);font-weight:900}
+    .bar{height:9px;background:#eef2f6;border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;background:var(--green);border-radius:999px}.footer-note{font-size:12px;color:var(--muted);margin-top:8px}
+
+    .chart-wrap{background:#fbfdff;border:1px solid var(--line);border-radius:16px;padding:14px;overflow:auto}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0 0;font-size:12px;color:var(--muted)}
+    .legend i{display:inline-block;width:22px;height:4px;border-radius:999px;margin-left:5px;vertical-align:middle}.line-base{background:#1f4e79}.line-manager{background:#138a5e}.line-gap{background:#b7791f}
+    .align-ok{color:var(--green);font-weight:900}.align-mid{color:var(--amber);font-weight:900}.align-bad{color:var(--red);font-weight:900}.baseline-grid select{direction:ltr;text-align:center}.baseline-grid .degree-note{font-size:11px;color:#667085;margin-top:4px}.baseline-select{min-width:210px}
+    @media(max-width:980px){.app{grid-template-columns:1fr}aside{position:static;height:auto}.g2,.g3,.g4,.scorebox{grid-template-columns:1fr}}
+    @media print{header,aside,.no-print{display:none}.app{display:block;padding:0}.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}body{background:white}}
+  </style>
+</head>
+<body>
+<header><h1>استودیو ارزش‌یابی شغل داتین <span style="font-size:13px;opacity:.85">نسخه ۴.۴ - سطوح شغلی داتین</span></h1><p>ابزار داده‌محور برای مدیریت شغل‌ها، طراحی سؤالات، محاسبه IPE، کلاس شغلی و مهاجرت داده بین نسخه‌ها</p></header>
+<div class="app">
+  <aside>
+    <div class="nav">
+      <button class="active" data-view="eval">📝 ارزیابی شغل</button>
+      <button data-view="overview">📊 نمای کل شغل‌ها</button>
+      <button data-view="alignment">📈 انطباق با شناسنامه</button>
+      <button data-view="jobs">📂 مدیریت شغل‌ها</button>
+      <button data-view="questions">❓ مدیریت سؤالات</button>
+      <button data-view="dictionary">📚 دیکشنری / گزینه‌ها</button>
+      <button data-view="settings">⚙ تنظیمات Mercer</button>
+      <button data-view="data">🧩 مدیریت داده‌ها و مهاجرت</button>
+      <button data-view="io">💾 خروجی / ورودی</button>
+      <button data-view="guide">ℹ️ راهنما</button>
+    </div>
+    <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+    <div class="hint">داده‌ها در همین مرورگر ذخیره می‌شوند. برای انتقال یا ارتقا نسخه، از بخش مدیریت داده‌ها و مهاجرت استفاده کنید.</div>
+  </aside>
+  <main>
+    <section id="eval" class="view"></section>
+    <section id="overview" class="view hidden"></section>
+    <section id="alignment" class="view hidden"></section>
+    <section id="jobs" class="view hidden"></section>
+    <section id="questions" class="view hidden"></section>
+    <section id="dictionary" class="view hidden"></section>
+    <section id="settings" class="view hidden"></section>
+    <section id="data" class="view hidden"></section>
+    <section id="io" class="view hidden"></section>
+    <section id="guide" class="view hidden"></section>
+  </main>
+</div>
+<script>
+const LS_KEY='dotin_jves_v4_4_levels_2026_07';
+const OLD_KEYS=['dotin_jves_v4_file_migration_2026_07','dotin_jves_v3_data_management_2026_07','dotin_jves_v2_alignment_2026_07','dotin_jves_v1_2026_07'];
+const subfactorLabels={
+ 'Impact Nature':{1:'Delivery',2:'Operational',3:'Tactical',4:'Strategic',5:'Visionary'},
+ 'Contribution':{1:'Limited',2:'Some',3:'Direct',4:'Significant',5:'Major'},
+ 'Communication':{1:'Convey',2:'Adapt & Exchange',3:'Influence',4:'Negotiate',5:'Negotiate Long Term'},
+ 'Frame':{1:'Internal Shared Interests',2:'External Shared Interests',3:'Internal Divergent Interests',4:'External Divergent Interests'},
+ 'Innovation':{1:'Follow',2:'Check',3:'Modify',4:'Improve',5:'Create / Conceptualize',6:'Scientific / Technical Breakthrough'},
+ 'Complexity':{1:'Defined',2:'Difficult',3:'Complex',4:'Multi-dimensional'},
+ 'Knowledge':{1:'Limited Job Knowledge',2:'Basic Job Knowledge',3:'Broad Job Knowledge',4:'Expertise',5:'Professional Standard',6:'Organizational Generalist / Functional Specialist',7:'Broad Practical Experience / Functional Preeminence',8:'Broad and Deep Practical Experience'},
+ 'Teams':{1:'Team Member',2:'Team Leader',3:'Teams Manager'},
+ 'Breadth':{1:'Domestic',2:'Regional',3:'Global'}
+};
+const defaultQuestions=[
+ {id:1,section:'Impact',sub:'Impact Nature',weight:.35,text:'خروجی‌ها یا تصمیم‌های این شغل بیشترین اثر را در کدام سطح ایجاد می‌کنند؟',options:[['فعالیت‌ها یا وظایف فردی',1],['خروجی‌های یک تیم',2],['یک واحد، سرویس، محصول یا فرایند مشخص',3],['چند واحد، چند محصول یا چند فرایند اصلی',3.5],['یک معاونت یا حوزه اصلی کسب‌وکار',4],['کل شرکت یا گروه',5]]},
+ {id:2,section:'Impact',sub:'Impact Nature',weight:.45,text:'این شغل بیشتر چه نوع اثری ایجاد می‌کند؟',options:[['تحویل کار طبق دستورالعمل و استاندارد',1],['تحقق اهداف عملیاتی یا سطح خدمت',2],['طراحی یا تغییر فرایند، محصول، خدمت یا استاندارد',3],['تدوین برنامه یا جهت‌گیری میان‌مدت/بلندمدت یک حوزه',4],['تعیین جهت‌گیری کلان سازمان',5]]},
+ {id:3,section:'Impact',sub:'Impact Nature',weight:.20,text:'ماهیت اصلی ارزش ایجادشده توسط این شغل چیست؟',options:[['انجام فعالیت‌های مشخص و تکرارشونده',1],['پایدار نگه‌داشتن عملیات یا خدمت',2],['ایجاد یا بهبود روش، فرایند، محصول یا سرویس',3],['جهت‌دهی به برنامه‌ها و اولویت‌های یک حوزه',4],['شکل‌دهی به مأموریت، چشم‌انداز یا راهبرد کلان',5]]},
+ {id:4,section:'Contribution',sub:'Contribution',weight:.40,text:'وقتی تصمیم مهمی باید گرفته شود، نقش این شغل معمولاً چیست؟',options:[['اجراکننده تصمیم دیگران',1],['پیشنهاددهنده یا ارائه‌دهنده نظر کارشناسی',2],['تصمیم‌ساز برای تصمیم‌گیران',3],['تصمیم‌گیر اصلی در حوزه خود',4],['مسئول نهایی نتیجه و موفقیت حوزه',5]]},
+ {id:5,section:'Contribution',sub:'Contribution',weight:.30,text:'اگر این شغل یک هفته در دسترس نباشد، چه اثری ایجاد می‌شود؟',options:[['کارها با جایگزینی ساده ادامه می‌یابد',1],['سرعت یا کیفیت بخشی از کارها کاهش می‌یابد',2],['تصمیم‌ها یا خروجی‌های مهم یک حوزه عقب می‌افتد',3],['تصمیم‌های کلیدی واحد یا محصول متوقف می‌شود',4],['کسب‌وکار یا خدمت اصلی دچار اختلال جدی می‌شود',5]]},
+ {id:6,section:'Contribution',sub:'Contribution',weight:.30,text:'میزان اختیار تصمیم‌گیری این شغل چگونه است؟',options:[['طبق دستورالعمل مشخص عمل می‌کند',1],['با تأیید مدیر تصمیم می‌گیرد',2],['در حوزه تخصصی خود مستقل تصمیم‌سازی می‌کند',3],['در حوزه مسئولیت خود مستقل تصمیم‌گیری می‌کند',4],['سیاست یا جهت تصمیم‌گیری دیگران را تعیین می‌کند',5]]},
+ {id:7,section:'Communication',sub:'Communication',weight:.55,text:'بالاترین سطح تعاملی که این شغل به‌طور مستمر در آن قرار می‌گیرد کدام است؟',options:[['انتقال اطلاعات',1],['هماهنگی و تبادل نظر',2],['اقناع و اثرگذاری بر دیگران',3],['مذاکره برای رسیدن به توافق',4],['مذاکره راهبردی با اثر بلندمدت',5]]},
+ {id:8,section:'Communication',sub:'Frame',weight:.25,text:'بیشترین تعاملات مؤثر این شغل با کدام گروه انجام می‌شود؟',options:[['اعضای تیم یا همکاران داخلی هم‌هدف',1],['سایر تیم‌ها یا واحدهای داخلی',1.5],['مدیران یا کمیته‌های داخلی با اولویت‌های متفاوت',3],['مشتری، بانک یا تأمین‌کننده با هدف مشترک',2],['ذی‌نفع بیرونی با منافع متفاوت',4],['رگولاتور یا نهاد بیرونی با سطح تعارض بالا',4]]},
+ {id:9,section:'Communication',sub:'Communication',weight:.45,text:'وقتی اختلاف نظر وجود دارد، این شغل معمولاً چه کاری انجام می‌دهد؟',options:[['اطلاعات را شفاف ارائه می‌کند',1],['موضوع را توضیح می‌دهد و هماهنگی ایجاد می‌کند',2],['دیگران را برای پذیرش راهکار قانع می‌کند',3],['بین طرف‌ها توافق عملیاتی ایجاد می‌کند',4],['توافق مهم و بلندمدت ایجاد می‌کند',5]]},
+ {id:10,section:'Frame',sub:'Frame',weight:.55,text:'فضای غالب تعاملات این شغل چگونه است؟',options:[['تعامل داخلی با هدف مشترک',1],['تعامل بیرونی با هدف مشترک',2],['تعامل داخلی با منافع یا اولویت‌های متفاوت',3],['تعامل بیرونی با منافع یا اولویت‌های متفاوت',4]]},
+ {id:11,section:'Frame',sub:'Frame',weight:.20,text:'اختلاف منافع یا تعارض اولویت در تعاملات این شغل چقدر رایج است؟',options:[['تقریباً هیچ‌وقت',1],['گاهی و قابل حل با توضیح',2],['معمولاً و نیازمند مدیریت فعال',3],['بسیار رایج و نیازمند مذاکره جدی',4]]},
+ {id:12,section:'Innovation',sub:'Innovation',weight:.40,text:'بیشتر وقت این شغل صرف چه نوع کاری می‌شود؟',options:[['اجرای روش‌ها و رویه‌های موجود',1],['بررسی و رفع اشکال',2],['اصلاح و بهینه‌سازی روش‌ها',3],['بهبود جدی فرایند، محصول یا خدمت',4],['خلق راهکار یا رویکرد جدید',5],['ایجاد تحول جدی در فناوری، دانش یا مدل خدمت',6]]},
+ {id:13,section:'Innovation',sub:'Innovation',weight:.35,text:'در مواجهه با مسئله‌ای که راه‌حل آماده ندارد، این شغل معمولاً چه می‌کند؟',options:[['منتظر دستور یا رویه مشخص می‌ماند',1],['از تجربه‌های قبلی استفاده می‌کند',2],['روش موجود را اصلاح می‌کند',3],['راهکار جدید طراحی می‌کند',4],['رویکرد تازه‌ای خلق می‌کند',5],['مسیر فناورانه یا دانشی جدیدی ایجاد می‌کند',6]]},
+ {id:14,section:'Innovation',sub:'Innovation',weight:.25,text:'نوآوری این شغل معمولاً در کدام سطح اتفاق می‌افتد؟',options:[['در انجام وظایف یا ابزارهای روزمره خود',2],['در بهبود عملکرد تیم یا واحد',3],['در بهبود محصول، خدمت، فرایند یا تجربه مشتری',4],['در طراحی مدل، معماری یا راهکار جدید برای چند حوزه کسب‌وکار',5],['در ایجاد قابلیت، فناوری یا مدل کسب‌وکار جدید در سطح شرکت یا صنعت',6]]},
+ {id:15,section:'Complexity',sub:'Complexity',weight:.35,text:'مسائل اصلی این شغل معمولاً چه میزان ابهام یا پیچیدگی دارند؟',options:[['مشخص، تکرارشونده و با راه‌حل روشن',1],['نسبتاً مبهم و نیازمند بررسی چند عامل',2],['پیچیده و نیازمند ترکیب چند راهکار',3],['بسیار پیچیده و چندوجهی با اثر بر چند حوزه',4]]},
+ {id:16,section:'Complexity',sub:'Complexity',weight:.30,text:'برای حل مسائل این شغل معمولاً چه میزان هماهنگی بین حوزه‌ها لازم است؟',options:[['فقط در همان تخصص یا تیم',1],['با یک تیم یا تخصص دیگر',2],['با چند تخصص یا چند واحد',3],['بین چند حوزه کسب‌وکار با اثر انتها به انتها',4]]},
+ {id:17,section:'Complexity',sub:'Complexity',weight:.35,text:'برای حل مسائل اصلی این شغل معمولاً لازم است همزمان چه جنبه‌هایی در نظر گرفته شود؟',options:[['عمدتاً یک جنبه تخصصی، فنی یا عملیاتی',1],['ترکیب دو جنبه مانند فنی-عملیاتی یا فنی-مالی',2],['ترکیب سه جنبه مانند فنی-مالی-انسانی یا فنی-فرایندی-کسب‌وکاری',3],['همزمان ابعاد فنی، مالی، انسانی، عملیاتی و کسب‌وکاری با اثر سراسری',4]]},
+ {id:18,section:'Knowledge',sub:'Knowledge',weight:.30,text:'حداقل دانش لازم برای انجام موفق این شغل چیست؟',options:[['دانش پایه شغل',1],['دانش تخصصی مشخص',2],['دانش حرفه‌ای در یک حوزه',3],['خبرگی عمیق در یک حوزه',4],['مرجع سازمانی در یک حوزه تخصصی',6],['مرجع صنعت یا چند حوزه تخصصی',7]]},
+ {id:19,section:'Knowledge',sub:'Knowledge',weight:.20,text:'برای رسیدن به تسلط قابل قبول در این شغل معمولاً چه میزان یادگیری یا تجربه لازم است؟',options:[['آموزش کوتاه‌مدت',1],['چند ماه تجربه',2],['حداقل یک تا دو سال تجربه مرتبط',3],['چند سال تجربه در پروژه‌ها یا موقعیت‌های مشابه',4],['تجربه عمیق و کمیاب در سازمان یا صنعت',6]]},
+ {id:20,section:'Knowledge',sub:'Knowledge',weight:.25,text:'دامنه تخصص مورد نیاز برای موفقیت در این شغل چگونه است؟',options:[['یک تخصص مشخص',3],['چند تخصص مرتبط',4],['چند حوزه تخصصی و کسب‌وکاری',5],['ترکیبی از تخصص‌های مختلف در سطح سازمان',6]]},
+ {id:21,section:'Knowledge',sub:'Knowledge',weight:.25,text:'سطح تجربه مورد نیاز برای موفقیت در این شغل کدام است؟',options:[['تجربه در یک حوزه تخصصی',3],['تجربه در چند پروژه یا تیم',4],['تجربه در چند حوزه یا واحد سازمانی',5],['تجربه گسترده در سطح سازمان یا صنعت',7]]},
+ {id:22,section:'Teams',sub:'Teams',weight:.60,text:'مسئولیت رسمی یا عملی این شغل نسبت به افراد چگونه است؟',options:[['مسئول مستقیم افراد نیست',1],['راهبری یک تیم را بر عهده دارد',2],['مدیریت چند تیم یا ساختار تیمی را بر عهده دارد',3]]},
+ {id:23,section:'Teams',sub:'Teams',weight:.40,text:'بیشترین نقش این شغل نسبت به افراد چیست؟',options:[['همکاری فردی بدون راهبری',1],['راهنمایی تخصصی یا منتورینگ غیررسمی',1.5],['راهبری، تقسیم کار و پایش خروجی تیم',2],['مدیریت چند تیم و تعیین ساختار نقش‌ها',3]]},
+ {id:24,section:'Breadth',sub:'Breadth',weight:.60,text:'دانش، تصمیم‌ها یا استانداردهای این شغل معمولاً در چه دامنه‌ای استفاده یا اثرگذار می‌شود؟',options:[['یک تیم یا محل مشخص در کشور',1],['یک واحد، سرویس یا محصول در کشور',1],['چند واحد یا چند محصول در شرکت',1],['کل شرکت در کشور',1],['گروه یا فعالیت منطقه‌ای/چندکشوری',2],['بازارها، استانداردها یا عملیات جهانی',3]]},
+ {id:25,section:'Breadth',sub:'Breadth',weight:.40,text:'برای انجام موفق این شغل، شناخت کدام محیط ضروری است؟',options:[['فقط تیم و فرایندهای داخلی',1],['واحد، محصول و مشتریان داخلی در کشور',1],['کل شرکت، مشتریان و ذی‌نفعان داخلی کشور',1],['چند کشور یا محیط منطقه‌ای',2],['بازارها، فناوری‌ها یا استانداردهای جهانی',3]]}
+];
+const impactPoints=[[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],[15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15],[25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25],[37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,78,80],[44,48,52,56,60,64,68,72,76,80,84,88,92,96,100,104,108,117,121,125],[56,62,68,74,80,86,92,98,104,110,116,122,128,134,140,151,162,168,174,180],[63,71,79,87,95,103,111,119,127,135,143,151,159,167,180,193,201,209,217,225],[80,89,98,107,116,125,134,143,152,161,170,179,188,202,216,230,239,248,257,266],[87,98,109,120,131,142,153,164,175,186,197,208,224,240,256,267,278,289,300,311],[104,116,128,140,152,164,176,188,200,212,224,241,258,275,292,304,316,328,340,352],[111,125,139,153,167,181,195,209,223,237,256,275,294,313,327,341,355,369,383,397],[128,144,160,176,192,208,224,240,256,277,298,319,340,361,377,393,409,425,441,457],[135,153,171,189,207,225,243,261,284,307,330,353,376,394,412,430,448,466,484,502],[147,167,187,207,227,247,267,292,317,342,367,392,417,437,457,477,497,517,537,557],[155,177,199,221,243,265,292,319,346,373,395,422,449,471,493,515,537,559,581,603],[168,192,216,240,264,293,322,351,380,409,438,467,491,515,539,563,587,611,635,659],[176,202,228,254,285,316,347,378,409,440,471,497,523,549,575,601,627,653,679,705]];
+const commPoints=[[10,25,30,45],[25,40,45,60],[40,55,60,75],[55,75,80,100],[70,90,95,115]];
+const innovPoints=[[10,15,20,25],[25,30,35,40],[40,45,50,55],[65,70,75,80],[90,95,100,105],[115,120,125,130]];
+const knowPoints=[[15,25,35,50,60,70,75,85,95],[30,40,50,65,75,85,90,100,110],[60,70,80,95,105,115,120,130,140],[90,100,110,125,135,145,150,160,170],[113,123,133,148,158,168,173,183,193],[135,145,155,170,180,190,195,205,215],[158,168,178,193,203,213,218,228,238],[180,190,200,215,225,235,240,250,260]];
+const riskPoints=[[0,0,0],[5,10,15],[15,20,25],[25,30,35]];
+function uid(){return 'id_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
+function defaultBaseline(){return {'Impact Nature':2.5,'Contribution':2,'Communication':2,'Frame':1,'Innovation':2,'Complexity':1,'Knowledge':3,'Teams':1,'Breadth':1}}
+function defaultLevelConfig(){return [
+  {code:'L1',professional:'کاردان',management:'کاردان',minPc:40,maxPc:44},
+  {code:'L2',professional:'کارشناس',management:'کارشناس',minPc:45,maxPc:49},
+  {code:'L3',professional:'کارشناس ارشد',management:'کارشناس ارشد',minPc:50,maxPc:54},
+  {code:'L4',professional:'کارشناس عالی',management:'راهبر',minPc:55,maxPc:59},
+  {code:'L5',professional:'کارشناس خبره',management:'مدیر بخش',minPc:60,maxPc:64},
+  {code:'L6',professional:'کارشناس سرآمد',management:'مدیر واحد',minPc:65,maxPc:99}
+]}
+function levelConfig(){return (state&&state.settings&&Array.isArray(state.settings.levels)&&state.settings.levels.length)?state.settings.levels:defaultLevelConfig()}
+function levelByCode(code){return levelConfig().find(l=>l.code===code)||levelConfig()[0]||defaultLevelConfig()[0]}
+function inferLevelCode(title,stream='تخصصی'){if(!title)return 'L2'; const t=String(title).trim(); const f=levelConfig().find(l=>l.code===t||l.professional===t||l.management===t); return f?f.code:'L2'}
+function jobLevelTitle(job){const cfg=levelByCode(job.levelCode||inferLevelCode(job.level,job.stream)); const stream=job.stream||'تخصصی'; return stream==='مدیریتی'?(cfg.management||cfg.professional||cfg.code):(cfg.professional||cfg.management||cfg.code)}
+function levelOptions(selected){return levelConfig().map(l=>`<option value="${esc(l.code)}" ${l.code===selected?'selected':''}>${esc(l.code)} - ${esc(l.professional)} / ${esc(l.management)}</option>`).join('')}
+function suggestedLevel(job){const pc=Number(calc(job).points.pc); if(!isFinite(pc)) return null; return levelConfig().find(l=>pc>=Number(l.minPc||0)&&pc<=Number(l.maxPc||999))||null}
+function defaultJob(){return {id:uid(),title:'کارشناس سرمایه انسانی',family:'Human Resources',subfamily:'HR Generalists',stream:'تخصصی',levelCode:'L2',level:'کارشناس',answers:{},evidence:{},size:10,riskType:'Normal',riskExposure:'Low',baseline:defaultBaseline()}}
+function defaultState(){return {jobs:[defaultJob()],questions:structuredClone(defaultQuestions),selectedJobId:null,settings:{halfStep:true,levels:defaultLevelConfig()}}}
+let state=load(); if(!state.selectedJobId&&state.jobs[0]) state.selectedJobId=state.jobs[0].id;
+function load(){try{const raw=localStorage.getItem(LS_KEY);return raw?JSON.parse(raw):defaultState()}catch(e){return defaultState()}}
+function save(){localStorage.setItem(LS_KEY,JSON.stringify(state))}
+function roundHalf(x){return Math.round(x*2)/2}
+function interp(table,x,y){if(x===''||y===''||x==null||y==null)return ''; x=Number(x);y=Number(y); const x1=Math.max(1,Math.floor(x)), x2=Math.min(table.length,Math.ceil(x)); const y1=Math.max(1,Math.floor(y)), y2=Math.min(table[0].length,Math.ceil(y)); const v11=table[x1-1][y1-1],v12=table[x1-1][y2-1],v21=table[x2-1][y1-1],v22=table[x2-1][y2-1]; if(x1===x2&&y1===y2)return v11; if(x1===x2)return v11+(y-y1)*(v12-v11)/(y2-y1); if(y1===y2)return v11+(x-x1)*(v21-v11)/(x2-x1); return v11+(x-x1)*(v21-v11)/(x2-x1)+(y-y1)*(v12-v11)/(y2-y1)+(x-x1)*(y-y1)*(v22-v21-v12+v11)/((x2-x1)*(y2-y1));}
+function scoreSub(job, sub){const qs=state.questions.filter(q=>q.sub===sub); let sw=0,ss=0,vals=[]; for(const q of qs){const ans=job.answers[q.id]; const opt=q.options.find(o=>o[0]===ans); if(opt){sw+=Number(q.weight||0); ss+=Number(opt[1])*Number(q.weight||0); vals.push(Number(opt[1]));}} if(!sw)return {raw:'',degree:'',confidence:''}; const raw=ss/sw, degree=state.settings.halfStep?roundHalf(raw):Math.round(raw); let conf=''; if(vals.length>1){const max=Math.max(...vals), min=Math.min(...vals); const subMax=Math.max(...qs.flatMap(q=>q.options.map(o=>Number(o[1])))); conf=Math.max(0,1-(max-min)/Math.max(1,subMax-1));} return {raw,degree,confidence:conf};}
+function label(sub,deg){if(deg===''||deg==null)return ''; const k=Math.max(1,Math.min(99,Math.round(Number(deg)))); return (subfactorLabels[sub]&&subfactorLabels[sub][k])||''}
+
+function baselineOptionLabel(sub,deg){
+  deg=Number(deg); if(!isFinite(deg)) return '';
+  const labels=subfactorLabels[sub]||{};
+  if(Math.abs(deg-Math.round(deg))<0.001) return (labels[Math.round(deg)]||('Degree '+deg));
+  const low=Math.floor(deg), high=Math.ceil(deg);
+  const l1=labels[low]||low, l2=labels[high]||high;
+  return `${l1}+ / ${l2}-`;
+}
+function baselineOptions(sub,max){
+  let html='';
+  for(let v=1; v<=max; v+=0.5){
+    html+=`<option value="${v}">${baselineOptionLabel(sub,v)}  —  Degree ${v}</option>`;
+  }
+  return html;
+}
+function baselineSelect(job,f,compact=false){
+  const base=ensureBaseline(job); const val=String(base[f.key]??'');
+  const opts=baselineOptions(f.key,f.max).replace(`value="${val}"`,`value="${val}" selected`);
+  return `<select class="baseline-select" data-id="${job.id}" data-base="${esc(f.key)}" title="${esc(f.label)}">${opts}</select>${compact?'':`<div class="degree-note">${esc(baselineOptionLabel(f.key,base[f.key]))} — Degree ${base[f.key]}</div>`}`;
+}
+function calc(job){const s={}; ['Impact Nature','Contribution','Communication','Frame','Innovation','Complexity','Knowledge','Teams','Breadth'].forEach(sub=>s[sub]=scoreSub(job,sub)); const impactDegree=(s['Impact Nature'].degree&&s['Contribution'].degree)?3*(s['Impact Nature'].degree-1)+s['Contribution'].degree:''; const impact=impactDegree?interp(impactPoints,impactDegree,Number(job.size||10)):''; const communication=interp(commPoints,s['Communication'].degree,s['Frame'].degree); const innovation=interp(innovPoints,s['Innovation'].degree,s['Complexity'].degree); const kb=(s['Teams'].degree&&s['Breadth'].degree)?((s['Teams'].degree-1)*3+s['Breadth'].degree):''; const knowledge=interp(knowPoints,s['Knowledge'].degree,kb); const riskMap={Normal:0,Mental:1,Injury:2,Disability:3}; const expMap={Low:1,Medium:2,High:3}; const rd=riskMap[job.riskType||'Normal']??0, ed=expMap[job.riskExposure||'Low']??1; const risk=rd===0?0:riskPoints[rd][ed-1]; const total=[impact,communication,innovation,knowledge,risk].some(v=>v==='')?'':Math.round((impact+communication+innovation+knowledge+risk)*10)/10; const pc=total===''?'':(total<26?'Below PC40':39+Math.ceil((total-25)/25)); return {s,impactDegree,points:{impact,communication,innovation,knowledge,risk,total,pc}}}
+function currentJob(){return state.jobs.find(j=>j.id===state.selectedJobId)||state.jobs[0]}
+function setView(id){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id)); render(id)}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+function render(id){({eval:renderEval,overview:renderOverview,alignment:renderAlignment,jobs:renderJobs,questions:renderQuestions,dictionary:renderDictionary,settings:renderSettings,data:renderDataManagement,io:renderIO,guide:renderGuide}[id]||renderEval)()}
+function jobSelector(){return `<select id="jobSel">${state.jobs.map(j=>`<option value="${j.id}" ${j.id===state.selectedJobId?'selected':''}>${esc(j.title)}</option>`).join('')}</select>`}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function renderEval(){const job=currentJob(); if(!job){document.getElementById('eval').innerHTML='<div class="card">ابتدا یک شغل اضافه کنید.</div>';return} const c=calc(job); const html=`<div class="card"><div class="grid g3"><div><label>انتخاب شغل</label>${jobSelector()}</div><div><label>Company Size Degree</label><select id="jobSize">${Array.from({length:20},(_,i)=>`<option ${job.size===i+1?'selected':''}>${i+1}</option>`).join('')}</select></div><div><label>Risk</label><div class="grid g2"><select id="riskType">${['Normal','Mental','Injury','Disability'].map(x=>`<option ${job.riskType===x?'selected':''}>${x}</option>`).join('')}</select><select id="riskExposure">${['Low','Medium','High'].map(x=>`<option ${job.riskExposure===x?'selected':''}>${x}</option>`).join('')}</select></div></div></div></div>
+<div class="card"><h2>خلاصه محاسبات</h2><div class="scorebox"><div class="metric"><div class="name">IPE Score</div><div class="val">${c.points.total||'-'}</div></div><div class="metric"><div class="name">Position Class</div><div class="val">${c.points.pc||'-'}</div></div><div class="metric"><div class="name">Impact Degree</div><div class="val">${c.impactDegree?Number(c.impactDegree).toFixed(1):'-'}</div></div><div class="metric"><div class="name">سؤالات پاسخ‌داده‌شده</div><div class="val">${Object.keys(job.answers||{}).length}/${state.questions.length}</div></div></div></div>
+<div class="card"><h2>فرم پاسخ‌دهی مدیر</h2>${state.questions.map(q=>{const ans=job.answers[q.id]||'';const opt=q.options.find(o=>o[0]===ans);return `<div class="question"><div class="qhead"><div><span class="pill blue">${q.id}</span> <span class="pill">${esc(q.section)}</span> <span class="pill green">${esc(q.sub)}</span></div><span class="hint">وزن: ${q.weight}</span></div><div class="qtitle">${esc(q.text)}</div><div class="grid g2" style="margin-top:8px"><div><label>پاسخ مدیر</label><select data-q="${q.id}" class="ans"><option value="">انتخاب کنید...</option>${q.options.map(o=>`<option value="${esc(o[0])}" ${ans===o[0]?'selected':''}>${esc(o[0])} (${o[1]})</option>`).join('')}</select></div><div><label>شاهد / مثال واقعی</label><textarea data-q="${q.id}" class="ev">${esc(job.evidence?.[q.id]||'')}</textarea></div></div><div class="footer-note">Mercer: ${opt?esc(label(q.sub,opt[1])):'-'}</div></div>`}).join('')}</div>`; document.getElementById('eval').innerHTML=html; document.querySelector('#eval #jobSel').onchange=e=>{state.selectedJobId=e.target.value;save();renderEval()}; document.getElementById('jobSize').onchange=e=>{job.size=Number(e.target.value);save();renderEval()}; document.getElementById('riskType').onchange=e=>{job.riskType=e.target.value;save();renderEval()}; document.getElementById('riskExposure').onchange=e=>{job.riskExposure=e.target.value;save();renderEval()}; document.querySelectorAll('.ans').forEach(el=>el.onchange=e=>{job.answers[e.target.dataset.q]=e.target.value;save();renderEval()}); document.querySelectorAll('.ev').forEach(el=>el.oninput=e=>{job.evidence=job.evidence||{};job.evidence[e.target.dataset.q]=e.target.value;save()});}
+function renderOverview(){const rows=state.jobs.map(j=>{const c=calc(j);const a=alignmentSummary(j);const sg=suggestedLevel(j);const mismatch=sg&&j.levelCode&&sg.code!==j.levelCode;return `<tr><td>${esc(j.title)}</td><td>${esc(j.family||'')}</td><td>${esc(j.subfamily||'')}</td><td>${esc(j.stream||'تخصصی')}</td><td>${esc(j.levelCode||'')}</td><td>${esc(jobLevelTitle(j))}${mismatch?`<div class="degree-note align-mid">پیشنهاد سیستم: ${esc(sg.code)} - ${esc((j.stream==='مدیریتی'?sg.management:sg.professional)||'')}</div>`:''}</td><td>${c.points.total||'-'}</td><td>${c.points.pc||'-'}</td><td>${c.impactDegree?Number(c.impactDegree).toFixed(1):'-'}</td><td>${c.s['Knowledge'].degree||'-'}</td><td>${Object.keys(j.answers||{}).length}/${state.questions.length}</td><td><span class="${a.cls}">${esc(a.status)}</span></td></tr>`}).join(''); document.getElementById('overview').innerHTML=`<div class="card"><h2>نمای کل شغل‌ها</h2><div class="scroll"><table><thead><tr><th>شغل</th><th>Family</th><th>SubFamily</th><th>مسیر</th><th>کد سطح</th><th>سطح شغلی</th><th>IPE</th><th>PC</th><th>Impact Degree</th><th>Knowledge</th><th>پاسخ‌ها</th><th>انطباق</th></tr></thead><tbody>${rows}</tbody></table></div></div>`}
+const alignmentFactors=[
+  {key:'Impact Nature',label:'Impact',max:5},
+  {key:'Contribution',label:'Contribution',max:5},
+  {key:'Communication',label:'Communication',max:5},
+  {key:'Frame',label:'Frame',max:4},
+  {key:'Innovation',label:'Innovation',max:6},
+  {key:'Complexity',label:'Complexity',max:4},
+  {key:'Knowledge',label:'Knowledge',max:8},
+  {key:'Teams',label:'Teams',max:3},
+  {key:'Breadth',label:'Breadth',max:3}
+];
+function ensureBaseline(job){job.baseline=job.baseline||defaultBaseline(); alignmentFactors.forEach(f=>{if(job.baseline[f.key]===undefined||job.baseline[f.key]===null||job.baseline[f.key]==='') job.baseline[f.key]=defaultBaseline()[f.key]??1}); return job.baseline}
+function managerDegrees(job){const c=calc(job); const d={}; alignmentFactors.forEach(f=>d[f.key]=c.s[f.key].degree); return d}
+function gapClass(diff){if(diff===''||isNaN(diff))return 'muted'; if(diff<=0.5)return 'align-ok'; if(diff<=1)return 'align-mid'; return 'align-bad'}
+function gapLabel(diff){if(diff===''||isNaN(diff))return 'نامشخص'; if(diff<=0.5)return 'منطبق'; if(diff<=1)return 'نیازمند بازبینی سبک'; return 'نیازمند کالیبراسیون'}
+function alignmentSummary(job){const base=ensureBaseline(job), mgr=managerDegrees(job); let diffs=[]; alignmentFactors.forEach(f=>{const m=Number(mgr[f.key]), b=Number(base[f.key]); if(isFinite(m)&&isFinite(b)) diffs.push(Math.abs(m-b));}); const avg=diffs.length?diffs.reduce((a,b)=>a+b,0)/diffs.length:''; return {avg, status: avg===''?'نامشخص':gapLabel(avg), cls:avg===''?'muted':gapClass(avg), answered:Object.keys(job.answers||{}).length}}
+function alignmentLineSvg(job){const base=ensureBaseline(job), mgr=managerDegrees(job); const W=940,H=330,ml=52,mr=24,mt=30,mb=70; const maxY=8; const plotW=W-ml-mr, plotH=H-mt-mb; const x=i=>ml+(plotW*(i/(alignmentFactors.length-1))); const y=v=>mt+plotH-(Number(v||0)/maxY)*plotH; const pts=(obj)=>alignmentFactors.map((f,i)=>{const v=obj[f.key]; return (v===''||v==null||isNaN(Number(v)))?null:[x(i),y(v)]}); const polyline=(points,color,dash='')=>{let segs=[],curr=[]; points.forEach(p=>{if(p)curr.push(p); else if(curr.length){segs.push(curr);curr=[]}}); if(curr.length)segs.push(curr); return segs.map(s=>`<polyline points="${s.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ${dash?`stroke-dasharray="${dash}"`:''}/>`).join('')}; const basePts=pts(base), mgrPts=pts(mgr); const grid=[1,2,3,4,5,6,7,8].map(t=>`<line x1="${ml}" y1="${y(t)}" x2="${W-mr}" y2="${y(t)}" stroke="#e6eaf0"/><text x="${ml-12}" y="${y(t)+4}" text-anchor="end" font-size="11" fill="#667085">${t}</text>`).join(''); const labels=alignmentFactors.map((f,i)=>`<text x="${x(i)}" y="${H-34}" text-anchor="middle" font-size="11" fill="#344054">${f.label}</text>`).join(''); const circles=(points,color)=>points.map((p,i)=>p?`<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="${color}"><title>${alignmentFactors[i].label}: ${alignmentFactors[i].key}</title></circle>`:'').join(''); return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="360" role="img" aria-label="نمودار انطباق پروفایل شغل"><rect x="0" y="0" width="${W}" height="${H}" fill="white"/>${grid}<line x1="${ml}" y1="${mt}" x2="${ml}" y2="${H-mb}" stroke="#cfd7e2"/><line x1="${ml}" y1="${H-mb}" x2="${W-mr}" y2="${H-mb}" stroke="#cfd7e2"/>${labels}${polyline(basePts,'#1f4e79','6 4')}${polyline(mgrPts,'#138a5e')}${circles(basePts,'#1f4e79')}${circles(mgrPts,'#138a5e')}</svg>`}
+function renderAlignment(){const job=currentJob(); if(!job){document.getElementById('alignment').innerHTML='<div class="card">ابتدا یک شغل اضافه کنید.</div>';return} const c=calc(job), base=ensureBaseline(job), mgr=managerDegrees(job), sum=alignmentSummary(job); const rows=alignmentFactors.map(f=>{const b=Number(base[f.key]); const m=mgr[f.key]; const diff=(m===''||m==null||isNaN(Number(m)))?'':Math.abs(Number(m)-b); return `<tr><td>${esc(f.label)}</td><td>${esc(baselineOptionLabel(f.key,b))}<div class="degree-note ltr">${b}</div></td><td>${m===''?'-':esc(label(f.key,m))}<div class="degree-note ltr">${m===''?'':m}</div></td><td class="ltr ${gapClass(diff)}">${diff===''?'-':diff.toFixed(1)}</td><td class="${gapClass(diff)}">${gapLabel(diff)}</td></tr>`}).join(''); const editRows=alignmentFactors.map(f=>`<div><label>${esc(f.label)} / ${esc(f.key)}</label>${baselineSelect(job,f)}</div>`).join(''); document.getElementById('alignment').innerHTML=`<div class="card"><div class="grid g3"><div><label>انتخاب شغل</label>${jobSelector()}</div><div class="metric"><div class="name">IPE مدیر</div><div class="val">${c.points.total||'-'}</div></div><div class="metric"><div class="name">PC مدیر</div><div class="val">${c.points.pc||'-'}</div></div></div></div><div class="card"><h2>Job Profile Alignment</h2><p class="hint">مقایسه پروفایل شناسنامه‌ای شغل با ارزیابی مدیر بر اساس Degree هر مولفه. تمرکز این نمودار روی شکل پروفایل است، نه روی اختلاف‌های ریز عددی.</p><div class="scorebox"><div class="metric"><div class="name">میانگین اختلاف Degree</div><div class="val ${sum.cls}">${sum.avg===''?'-':sum.avg.toFixed(1)}</div></div><div class="metric"><div class="name">وضعیت کلی</div><div class="val ${sum.cls}" style="font-size:18px">${sum.status}</div></div><div class="metric"><div class="name">پاسخ‌ها</div><div class="val">${sum.answered}/${state.questions.length}</div></div><div class="metric"><div class="name">نمایش</div><div class="val" style="font-size:18px">Baseline × Manager</div></div></div><div class="chart-wrap" style="margin-top:14px">${alignmentLineSvg(job)}<div class="legend"><span><i class="line-base"></i>شناسنامه مرجع</span><span><i class="line-manager"></i>ارزیابی مدیر</span></div></div></div><div class="card"><h2>جدول اختلاف مولفه‌ها</h2><div class="scroll"><table><thead><tr><th>مولفه</th><th>شناسنامه</th><th>مدیر</th><th>اختلاف</th><th>وضعیت</th></tr></thead><tbody>${rows}</tbody></table></div></div><div class="card"><h2>ثبت/ویرایش پروفایل شناسنامه‌ای همین شغل</h2><p class="hint">این مقادیر همان Baseline شناسنامه اصلی هستند. بعداً می‌توانیم برای هر شغل از شناسنامه‌های رسمی وارد کنیم.</p><div class="grid g3 baseline-grid">${editRows}</div><div class="btns" style="margin-top:12px"><button class="btn secondary" id="resetBaseline">بازگشت به الگوی پیش‌فرض</button></div></div>`; document.querySelector('#alignment #jobSel').onchange=e=>{state.selectedJobId=e.target.value;save();renderAlignment()}; document.querySelectorAll('#alignment select[data-base]').forEach(sel=>sel.onchange=e=>{job.baseline=job.baseline||{};job.baseline[e.target.dataset.base]=Number(e.target.value);save();renderAlignment()}); document.getElementById('resetBaseline').onclick=()=>{job.baseline=defaultBaseline();save();renderAlignment()}}
+function renderJobs(){
+  const baselineHeaders=alignmentFactors.map(f=>`<th>${esc(f.label)}</th>`).join('');
+  const baselineCells=(j)=>alignmentFactors.map(f=>`<td>${baselineSelect(j,f,true)}<div class="degree-note">Degree ${ensureBaseline(j)[f.key]}</div></td>`).join('');
+  const levelCell=(j)=>`<select data-id="${j.id}" data-f="levelCode">${levelOptions(j.levelCode||inferLevelCode(j.level,j.stream))}</select><div class="degree-note">${esc(jobLevelTitle(j))}</div>`;
+  document.getElementById('jobs').innerHTML=`<div class="card"><h2>مدیریت شغل‌ها</h2><p class="hint">در این بخش علاوه بر اطلاعات پایه شغل، می‌توانید مسیر شغلی و سطح شغلی داتین را انتخاب کنید. عناوین سطوح از بخش «تنظیمات Mercer» قابل تغییر هستند.</p><div class="btns"><button class="btn green" id="addJob">افزودن شغل</button><button class="btn secondary" id="dupJob">کپی از شغل انتخابی</button><button class="btn amber" id="fillDefaultBaseline">تکمیل Baseline خالی با پیش‌فرض</button></div></div>
+  <div class="card"><h2>اطلاعات پایه شغل</h2><div class="scroll"><table><thead><tr><th>عنوان</th><th>Family</th><th>SubFamily</th><th>مسیر شغلی</th><th>سطح شغلی داتین</th><th>پیشنهاد سیستم</th><th>عملیات</th></tr></thead><tbody>${state.jobs.map(j=>{const sg=suggestedLevel(j);const sug=sg?`${esc(sg.code)} - ${esc((j.stream==='مدیریتی'?sg.management:sg.professional)||'')}`:'-';return `<tr><td><input data-id="${j.id}" data-f="title" value="${esc(j.title)}"></td><td><input data-id="${j.id}" data-f="family" value="${esc(j.family||'')}"></td><td><input data-id="${j.id}" data-f="subfamily" value="${esc(j.subfamily||'')}"></td><td><select data-id="${j.id}" data-f="stream"><option ${j.stream!=='مدیریتی'?'selected':''}>تخصصی</option><option ${j.stream==='مدیریتی'?'selected':''}>مدیریتی</option></select></td><td>${levelCell(j)}</td><td>${sug}</td><td><button class="btn small secondary selJob" data-id="${j.id}">انتخاب</button> <button class="btn small red delJob" data-id="${j.id}">حذف</button></td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="card"><h2>پروفایل مرجع شناسنامه‌ای مولفه‌ها</h2><p class="hint">به جای عدد، سطح مرسری هر مولفه را انتخاب کنید. مقدار عددی Degree پشت‌صحنه ذخیره می‌شود و در نمودار انطباق استفاده خواهد شد.</p><div class="scroll"><table><thead><tr><th>شغل</th>${baselineHeaders}</tr></thead><tbody>${state.jobs.map(j=>`<tr><td style="min-width:180px"><b>${esc(j.title)}</b><div class="degree-note">${esc(jobLevelTitle(j))}</div></td>${baselineCells(j)}</tr>`).join('')}</tbody></table></div></div>`;
+  document.getElementById('addJob').onclick=()=>{const j={id:uid(),title:'شغل جدید',family:'',subfamily:'',stream:'تخصصی',levelCode:'L2',level:'کارشناس',answers:{},evidence:{},size:10,riskType:'Normal',riskExposure:'Low',baseline:defaultBaseline()};state.jobs.push(j);state.selectedJobId=j.id;save();renderJobs()};
+  document.getElementById('dupJob').onclick=()=>{const j=structuredClone(currentJob()); j.id=uid(); j.title=(j.title||'شغل')+' - کپی'; state.jobs.push(j); state.selectedJobId=j.id; save(); renderJobs()};
+  document.getElementById('fillDefaultBaseline').onclick=()=>{state.jobs.forEach(j=>{j.baseline=j.baseline||{};const d=defaultBaseline();alignmentFactors.forEach(f=>{if(j.baseline[f.key]===undefined||j.baseline[f.key]===null||j.baseline[f.key]==='')j.baseline[f.key]=d[f.key]??1})});save();renderJobs()};
+  document.querySelectorAll('#jobs input[data-f]').forEach(inp=>inp.oninput=e=>{const j=state.jobs.find(x=>x.id===e.target.dataset.id);if(j){j[e.target.dataset.f]=e.target.value;save()}});
+  document.querySelectorAll('#jobs select[data-f]').forEach(sel=>sel.onchange=e=>{const j=state.jobs.find(x=>x.id===e.target.dataset.id);if(j){j[e.target.dataset.f]=e.target.value; if(e.target.dataset.f==='levelCode'||e.target.dataset.f==='stream'){j.level=jobLevelTitle(j)} save(); renderJobs()}});
+  document.querySelectorAll('#jobs select[data-base]').forEach(sel=>sel.onchange=e=>{const j=state.jobs.find(x=>x.id===e.target.dataset.id);if(j){j.baseline=j.baseline||defaultBaseline();j.baseline[e.target.dataset.base]=Number(e.target.value);save();renderJobs()}});
+  document.querySelectorAll('.selJob').forEach(b=>b.onclick=e=>{state.selectedJobId=e.target.dataset.id;save();setView('eval')});
+  document.querySelectorAll('.delJob').forEach(b=>b.onclick=e=>{if(state.jobs.length===1)return alert('حداقل یک شغل باید باقی بماند.'); if(confirm('حذف شود؟')){state.jobs=state.jobs.filter(j=>j.id!==e.target.dataset.id);state.selectedJobId=state.jobs[0].id;save();renderJobs()}})
+}
+function renderQuestions(){document.getElementById('questions').innerHTML=`<div class="card"><h2>مدیریت سؤالات</h2><div class="btns"><button class="btn green" id="addQ">افزودن سؤال</button><button class="btn amber" id="resetQ">بازگشت سؤالات پیش‌فرض</button></div><p class="hint">ویرایش سؤال‌ها بلافاصله روی فرم ارزیابی و محاسبات اثر می‌گذارد.</p></div><div class="card"><div class="scroll"><table><thead><tr><th>کد</th><th>بخش</th><th>SubFactor</th><th>وزن</th><th>متن سؤال</th><th>عملیات</th></tr></thead><tbody>${state.questions.map(q=>`<tr><td><input data-id="${q.id}" data-f="id" value="${q.id}"></td><td><input data-id="${q.id}" data-f="section" value="${esc(q.section)}"></td><td><select data-id="${q.id}" data-f="sub">${Object.keys(subfactorLabels).map(s=>`<option ${q.sub===s?'selected':''}>${s}</option>`).join('')}</select></td><td><input type="number" step="0.05" data-id="${q.id}" data-f="weight" value="${q.weight}"></td><td><textarea data-id="${q.id}" data-f="text">${esc(q.text)}</textarea></td><td><button class="btn small secondary editOpts" data-id="${q.id}">گزینه‌ها</button> <button class="btn small red delQ" data-id="${q.id}">حذف</button></td></tr>`).join('')}</tbody></table></div></div><div id="optEditor"></div>`; document.getElementById('addQ').onclick=()=>{const id=Math.max(0,...state.questions.map(q=>Number(q.id)))+1;state.questions.push({id,section:'Custom',sub:'Impact Nature',weight:1,text:'سؤال جدید',options:[['گزینه ۱',1]]});save();renderQuestions()}; document.getElementById('resetQ').onclick=()=>{if(confirm('سؤالات به نسخه پیش‌فرض برگردد؟ پاسخ‌های شغل‌ها حذف نمی‌شود اما ممکن است با سؤال‌ها ناسازگار شود.')){state.questions=structuredClone(defaultQuestions);save();renderQuestions()}}; document.querySelectorAll('#questions input,#questions textarea,#questions select').forEach(el=>el.oninput=e=>{const q=state.questions.find(x=>String(x.id)===String(e.target.dataset.id));const f=e.target.dataset.f; q[f]=(f==='id'||f==='weight')?Number(e.target.value):e.target.value;save()}); document.querySelectorAll('.delQ').forEach(b=>b.onclick=e=>{if(confirm('سؤال حذف شود؟')){state.questions=state.questions.filter(q=>String(q.id)!==String(e.target.dataset.id));save();renderQuestions()}}); document.querySelectorAll('.editOpts').forEach(b=>b.onclick=e=>renderOptionEditor(e.target.dataset.id));}
+function renderOptionEditor(qid){const q=state.questions.find(x=>String(x.id)===String(qid)); const el=document.getElementById('optEditor'); el.innerHTML=`<div class="card"><h2>گزینه‌های سؤال ${q.id}</h2><p><b>${esc(q.text)}</b></p><table><thead><tr><th>گزینه</th><th>امتیاز داخلی</th><th>عملیات</th></tr></thead><tbody>${q.options.map((o,i)=>`<tr><td><input data-i="${i}" data-f="text" value="${esc(o[0])}"></td><td><input type="number" step="0.5" data-i="${i}" data-f="score" value="${o[1]}"></td><td><button class="btn small red remOpt" data-i="${i}">حذف</button></td></tr>`).join('')}</tbody></table><div class="btns" style="margin-top:10px"><button class="btn green" id="addOpt">افزودن گزینه</button></div></div>`; el.querySelectorAll('input').forEach(inp=>inp.oninput=e=>{const i=Number(e.target.dataset.i); if(e.target.dataset.f==='text') q.options[i][0]=e.target.value; else q.options[i][1]=Number(e.target.value); save()}); el.querySelectorAll('.remOpt').forEach(b=>b.onclick=e=>{q.options.splice(Number(e.target.dataset.i),1);save();renderOptionEditor(qid)}); el.querySelector('#addOpt').onclick=()=>{q.options.push(['گزینه جدید',1]);save();renderOptionEditor(qid)};}
+function renderDictionary(){document.getElementById('dictionary').innerHTML=`<div class="card"><h2>دیکشنری فعلی سؤال‌ها و گزینه‌ها</h2><div class="scroll"><table><thead><tr><th>Q</th><th>SubFactor</th><th>سؤال</th><th>گزینه</th><th>Score</th><th>Mercer Equivalent</th></tr></thead><tbody>${state.questions.flatMap(q=>q.options.map(o=>`<tr><td>${q.id}</td><td>${esc(q.sub)}</td><td>${esc(q.text)}</td><td>${esc(o[0])}</td><td>${o[1]}</td><td>${esc(label(q.sub,o[1]))}</td></tr>`)).join('')}</tbody></table></div></div>`}
+function renderSettings(){
+  const levelRows=levelConfig().map((l,i)=>`<tr><td><input data-i="${i}" data-f="code" value="${esc(l.code)}"></td><td><input data-i="${i}" data-f="professional" value="${esc(l.professional||'')}"></td><td><input data-i="${i}" data-f="management" value="${esc(l.management||'')}"></td><td><input type="number" data-i="${i}" data-f="minPc" value="${esc(l.minPc??'')}"></td><td><input type="number" data-i="${i}" data-f="maxPc" value="${esc(l.maxPc??'')}"></td><td><button class="btn small red delLevel" data-i="${i}">حذف</button></td></tr>`).join('');
+  document.getElementById('settings').innerHTML=`<div class="card"><h2>تنظیمات موتور مرسر</h2><div class="grid g3"><div><label>محاسبه نیم‌پله</label><select id="half"><option value="true" ${state.settings.halfStep?'selected':''}>فعال</option><option value="false" ${!state.settings.halfStep?'selected':''}>غیرفعال</option></select></div></div><p class="hint">جداول امتیازدهی مرسر داخل موتور محاسباتی فایل قرار دارد.</p></div>
+  <div class="card"><h2>مدیریت سطوح شغلی داتین</h2><p class="hint">کد سطح، عنوان مسیر تخصصی، عنوان مسیر مدیریتی و بازه پیشنهادی PC قابل ویرایش است. این تنظیمات در مدیریت شغل‌ها و گزارش‌ها استفاده می‌شود.</p><div class="btns"><button class="btn green" id="addLevel">افزودن سطح</button><button class="btn amber" id="resetLevels">بازگشت سطوح پیش‌فرض</button></div><div class="scroll" style="margin-top:12px"><table><thead><tr><th>کد</th><th>عنوان تخصصی</th><th>عنوان مدیریتی</th><th>PC از</th><th>PC تا</th><th>عملیات</th></tr></thead><tbody>${levelRows}</tbody></table></div></div>
+  <div class="card danger-zone"><h3>بازنشانی کامل</h3><button class="btn red" id="resetAll">حذف همه داده‌ها و بازگشت به نسخه اولیه</button></div>`;
+  document.getElementById('half').onchange=e=>{state.settings.halfStep=e.target.value==='true';save();renderSettings()};
+  document.querySelectorAll('#settings input[data-f]').forEach(inp=>inp.oninput=e=>{const levels=levelConfig(); const l=levels[Number(e.target.dataset.i)]; const f=e.target.dataset.f; l[f]=(f==='minPc'||f==='maxPc')?Number(e.target.value):e.target.value; state.settings.levels=levels; state.jobs.forEach(j=>{if(j.levelCode===l.code)j.level=jobLevelTitle(j)}); save()});
+  document.getElementById('addLevel').onclick=()=>{state.settings.levels=levelConfig(); const n=state.settings.levels.length+1; state.settings.levels.push({code:'L'+n,professional:'سطح جدید',management:'سطح جدید',minPc:40,maxPc:99}); save(); renderSettings()};
+  document.getElementById('resetLevels').onclick=()=>{if(confirm('سطوح به حالت پیش‌فرض داتین برگردد؟')){state.settings.levels=defaultLevelConfig(); state.jobs.forEach(j=>{j.levelCode=inferLevelCode(j.level,j.stream); j.level=jobLevelTitle(j)}); save(); renderSettings()}};
+  document.querySelectorAll('.delLevel').forEach(b=>b.onclick=e=>{const levels=levelConfig(); if(levels.length<=1)return alert('حداقل یک سطح باید باقی بماند.'); levels.splice(Number(e.target.dataset.i),1); state.settings.levels=levels; save(); renderSettings()});
+  document.getElementById('resetAll').onclick=()=>{if(confirm('همه داده‌های مرورگر حذف شود؟')){localStorage.removeItem(LS_KEY);state=defaultState();state.selectedJobId=state.jobs[0].id;save();location.reload()}}
+}
+
+function normalizeImportedData(data){
+  if(!data || typeof data!=='object') throw new Error('ساختار داده معتبر نیست.');
+  const base=defaultState();
+  data.jobs=Array.isArray(data.jobs)?data.jobs:base.jobs;
+  data.questions=Array.isArray(data.questions)?data.questions:base.questions;
+  data.settings=data.settings||base.settings;
+  data.jobs=data.jobs.map(j=>({
+    id:j.id||uid(),
+    title:j.title||'شغل بدون عنوان',
+    family:j.family||'',
+    subfamily:j.subfamily||'',
+    stream:j.stream||'تخصصی',
+    levelCode:j.levelCode||inferLevelCode(j.level,j.stream||'تخصصی'),
+    level:j.level||'',
+    answers:j.answers||{},
+    evidence:j.evidence||{},
+    size:Number(j.size||10),
+    riskType:j.riskType||'Normal',
+    riskExposure:j.riskExposure||'Low',
+    baseline:j.baseline||defaultBaseline()
+  }));
+  data.questions=data.questions.map((q,i)=>({
+    id:q.id ?? i+1,
+    section:q.section||'عمومی',
+    sub:q.sub||'Impact Nature',
+    weight:Number(q.weight||1),
+    text:q.text||'سؤال بدون متن',
+    options:Array.isArray(q.options)&&q.options.length?q.options:[['گزینه ۱',1]]
+  }));
+  if(!data.selectedJobId || !data.jobs.some(j=>j.id===data.selectedJobId)) data.selectedJobId=data.jobs[0]?.id||null;
+  data.settings={halfStep:data.settings.halfStep!==false,levels:Array.isArray(data.settings.levels)?data.settings.levels:defaultLevelConfig()}; data.jobs.forEach(j=>{j.levelCode=j.levelCode||inferLevelCode(j.level,j.stream||'تخصصی'); j.level=j.level||jobLevelTitle(j)});
+  data.version='نسخه ۴';
+  data.lastMigrationAt=new Date().toISOString();
+  return data;
+}
+function availableOldData(){
+  return OLD_KEYS.map(key=>{let raw=localStorage.getItem(key); let parsed=null; try{parsed=raw?JSON.parse(raw):null}catch(e){} return {key,raw,parsed,count:parsed?.jobs?.length||0,questions:parsed?.questions?.length||0};});
+}
+
+function parseCsvText(text){
+  const rows=[]; let row=[], cur='', q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i], nx=text[i+1];
+    if(ch==='"'){
+      if(q && nx==='"'){cur+='"'; i++;}
+      else q=!q;
+    }else if(ch===',' && !q){row.push(cur.trim()); cur='';}
+    else if((ch==='\n'||ch==='\r') && !q){
+      if(ch==='\r' && nx==='\n') i++;
+      row.push(cur.trim()); cur='';
+      if(row.some(x=>String(x).trim()!=='')) rows.push(row);
+      row=[];
+    }else cur+=ch;
+  }
+  row.push(cur.trim()); if(row.some(x=>String(x).trim()!=='')) rows.push(row);
+  return rows;
+}
+function rowsToObjects(rows){
+  if(!rows||rows.length<2)return [];
+  const headers=rows[0].map(h=>String(h||'').trim());
+  return rows.slice(1).map(r=>{const o={}; headers.forEach((h,i)=>o[h]=r[i]??''); return o;});
+}
+function excelXmlRows(text){
+  const doc=new DOMParser().parseFromString(text,'text/xml');
+  const err=doc.querySelector('parsererror'); if(err) throw new Error('ساختار XML/Excel قابل خواندن نیست.');
+  const rows=[...doc.getElementsByTagName('Row')];
+  return rows.map(row=>[...row.getElementsByTagName('Cell')].map(c=>{const d=c.getElementsByTagName('Data')[0]; return d?d.textContent:''})).filter(r=>r.some(x=>String(x).trim()!==''));
+}
+function normHeader(h){return String(h||'').toLowerCase().replace(/[\s_\-\/\.]/g,'').replace(/ي/g,'ی').replace(/ك/g,'ک')}
+function pick(row, names){
+  const keys=Object.keys(row||{}); const wanted=names.map(normHeader);
+  for(const k of keys){ if(wanted.includes(normHeader(k))) return row[k]; }
+  return '';
+}
+function numVal(x){const n=Number(String(x??'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/,/g,'.')); return isFinite(n)?n:'';}
+function defaultJobFromRow(row, i){
+  const title=pick(row,['title','job','jobtitle','عنوان','عنوان شغل','شغل','نام شغل','Dotin Title Job']) || ('شغل واردشده '+(i+1));
+  const lvl=pick(row,['level','job level','سطح','سطح شغلی'])||''; const stream=pick(row,['stream','career stream','مسیر','مسیر شغلی'])||'تخصصی'; const j={id:uid(),title:String(title).trim(),family:pick(row,['family','job family','خانواده','خانواده شغلی'])||'',subfamily:pick(row,['subfamily','sub family','زیرخانواده','زیر خانواده','زیرخانواده شغلی'])||'',stream,levelCode:pick(row,['level code','کد سطح'])||inferLevelCode(lvl,stream),level:lvl,answers:{},evidence:{},size:numVal(pick(row,['size','company size','organization size','سایز','اندازه سازمان']))||10,riskType:pick(row,['risk type','ریسک'])||'Normal',riskExposure:pick(row,['risk exposure','مواجهه'])||'Low',baseline:defaultBaseline()}; j.level=j.level||jobLevelTitle(j);
+  const baselineMap={
+    'Impact Nature':['impact','impactnature','اثرگذاری','اثرگذاري'],
+    'Contribution':['contribution','پاسخگویی','پاسخگويي','نقش در نتیجه'],
+    'Communication':['communication','تعاملات','تعامل'],
+    'Frame':['frame','فضای تعامل','زمینه تعامل'],
+    'Innovation':['innovation','نوآوری','حل مسئله'],
+    'Complexity':['complexity','پیچیدگی','پيچيدگي'],
+    'Knowledge':['knowledge','دانش'],
+    'Teams':['teams','راهبری','راهبري'],
+    'Breadth':['breadth','دامنه']
+  };
+  Object.entries(baselineMap).forEach(([sf,names])=>{const v=numVal(pick(row,names)); if(v!=='') j.baseline[sf]=v;});
+  state.questions.forEach(q=>{
+    const ans=pick(row,['q'+q.id,'سوال '+q.id,'سؤال '+q.id,'پاسخ '+q.id]);
+    if(ans){j.answers[q.id]=ans;}
+    const ev=pick(row,['evidence '+q.id,'شاهد '+q.id,'مثال '+q.id]);
+    if(ev){j.evidence[q.id]=ev;}
+  });
+  return j;
+}
+function buildStateFromRows(rows){
+  const objs=rowsToObjects(rows); if(!objs.length) throw new Error('در فایل ردیف داده قابل استفاده پیدا نشد.');
+  const base=defaultState(); base.jobs=objs.map(defaultJobFromRow).filter(j=>j.title); base.selectedJobId=base.jobs[0]?.id||null; base.questions=structuredClone(state.questions||defaultQuestions); base.settings=structuredClone(state.settings||{halfStep:true}); base.version='نسخه ۴.۴ - سطوح شغلی داتین'; return base;
+}
+function detectFileData(fileName, text){
+  const name=String(fileName||'').toLowerCase();
+  if(name.endsWith('.xlsx')) throw new Error('فایل XLSX در نسخه HTML آفلاین مستقیم خوانده نمی‌شود. لطفاً آن را از Excel به CSV یا Excel 2003 XML / XLS خروجی بگیرید، یا JSON خروجی همین ابزار را بارگذاری کنید.');
+  let parsed=null, kind='';
+  const trimmed=String(text||'').trim();
+  if(trimmed.startsWith('{')||trimmed.startsWith('[')){
+    const js=JSON.parse(trimmed);
+    if(Array.isArray(js)){ parsed=buildStateFromRows([Object.keys(js[0]||{})].concat(js.map(o=>Object.keys(js[0]||{}).map(k=>o[k])))); kind='JSON جدولی'; }
+    else { parsed=normalizeImportedData(js); kind='JSON ساختاریافته'; }
+  }else if(trimmed.startsWith('<?xml')||trimmed.includes('<Workbook')||trimmed.includes('<Worksheet')){
+    parsed=buildStateFromRows(excelXmlRows(trimmed)); kind='Excel XML / XLS';
+  }else{
+    parsed=buildStateFromRows(parseCsvText(trimmed)); kind='CSV';
+  }
+  return {kind, data:parsed, jobs:parsed.jobs?.length||0, questions:parsed.questions?.length||0};
+}
+function mergeImportedState(imported, mode){
+  const before=structuredClone(state); localStorage.setItem(LS_KEY+'_backup_'+Date.now(),JSON.stringify(before));
+  if(mode==='replace'){ state=normalizeImportedData(imported); save(); return {added:state.jobs.length,updated:0,mode:'جایگزینی کامل'}; }
+  let added=0, updated=0;
+  const byTitle=new Map(state.jobs.map(j=>[String(j.title||'').trim().toLowerCase(),j]));
+  (imported.jobs||[]).forEach(nj=>{
+    const key=String(nj.title||'').trim().toLowerCase(); const ex=byTitle.get(key);
+    if(ex){ Object.assign(ex,{family:nj.family||ex.family,subfamily:nj.subfamily||ex.subfamily,stream:nj.stream||ex.stream,levelCode:nj.levelCode||ex.levelCode,level:nj.level||ex.level,size:nj.size||ex.size,riskType:nj.riskType||ex.riskType,riskExposure:nj.riskExposure||ex.riskExposure,baseline:{...ex.baseline,...nj.baseline},answers:{...ex.answers,...nj.answers},evidence:{...ex.evidence,...nj.evidence}}); updated++; }
+    else { state.jobs.push({...nj,id:nj.id||uid()}); added++; }
+  });
+  if(imported.questions?.length && confirm('سؤال‌های فایل بارگذاری‌شده هم جایگزین سؤال‌های فعلی شود؟')) state.questions=imported.questions;
+  if(!state.selectedJobId && state.jobs[0]) state.selectedJobId=state.jobs[0].id;
+  save(); return {added,updated,mode:'ادغام با داده‌های فعلی'};
+}
+
+function renderDataManagement(){
+  const olds=availableOldData();
+  const rows=olds.map(o=>`<tr><td class="ltr">${esc(o.key)}</td><td>${o.raw?'موجود':'ندارد'}</td><td>${o.count}</td><td>${o.questions}</td><td>${o.raw?`<button class="btn small green migrateOld" data-key="${esc(o.key)}">انتقال به نسخه ۴</button>`:'-'}</td></tr>`).join('');
+  document.getElementById('data').innerHTML=`<div class="card"><h2>مدیریت داده‌ها و مهاجرت نسخه‌ها</h2><p class="hint">این بخش برای انتقال داده‌های نسخه‌های قبلی، بارگذاری فایل از سیستم‌های دیگر، تهیه پشتیبان و بازیابی داده‌هاست. قبل از هر مهاجرت، یک پشتیبان خودکار داخل مرورگر ذخیره می‌شود.</p><div class="scorebox"><div class="metric"><div class="name">نسخه فعلی داده</div><div class="val" style="font-size:18px">نسخه ۴.۲</div></div><div class="metric"><div class="name">تعداد شغل‌ها</div><div class="val">${state.jobs.length}</div></div><div class="metric"><div class="name">تعداد سؤال‌ها</div><div class="val">${state.questions.length}</div></div><div class="metric"><div class="name">محل ذخیره</div><div class="val" style="font-size:16px">مرورگر</div></div></div></div>
+  <div class="card"><h2>بارگذاری و مهاجرت فایل از سیستم دیگر</h2><p class="hint">فایل‌های قابل قبول: JSON خروجی همین ابزار، CSV ساده، و Excel XML / XLS. برای XLSX، فایل را در Excel به CSV یا Excel 2003 XML ذخیره کنید.</p><div class="btns"><label class="btn amber" for="externalFile">انتخاب فایل برای مهاجرت</label><input id="externalFile" type="file" accept=".json,.csv,.txt,.xml,.xls,.xlsx" style="display:none"><select id="migrationMode" style="max-width:220px"><option value="merge">ادغام با داده‌های فعلی</option><option value="replace">جایگزینی کامل داده‌ها</option></select><button class="btn green" id="applyExternal" disabled>اجرای مهاجرت فایل</button></div><div id="externalPreview" class="hint" style="margin-top:12px">هنوز فایلی انتخاب نشده است.</div><textarea id="externalLog" class="ltr" style="margin-top:12px;min-height:150px" placeholder="گزارش پیش‌نمایش و خطاها اینجا نمایش داده می‌شود"></textarea></div>
+  <div class="card"><h2>انتقال خودکار از نسخه‌های قبلی</h2><div class="scroll"><table><thead><tr><th>کلید ذخیره نسخه قبلی</th><th>وضعیت</th><th>تعداد شغل</th><th>تعداد سؤال</th><th>عملیات</th></tr></thead><tbody>${rows}</tbody></table></div><p class="footer-note">انتقال، داده‌های نسخه قبلی را به ساختار نسخه ۴ تبدیل می‌کند. قبل از انتقال، از داده فعلی یک پشتیبان بگیرید.</p></div>
+  <div class="card"><h2>پشتیبان‌گیری و بازیابی</h2><div class="btns"><button class="btn" id="backupNow">دانلود پشتیبان کامل</button><label class="btn amber" for="restoreFile">بازیابی از فایل پشتیبان</label><input id="restoreFile" type="file" accept=".json" style="display:none"><button class="btn secondary" id="copyData">کپی متن داده‌ها</button></div><textarea id="dataPreview" class="ltr" style="margin-top:12px;min-height:220px">${esc(JSON.stringify(state,null,2))}</textarea></div><div class="card danger-zone"><h2>عملیات حساس</h2><div class="btns"><button class="btn red" id="clearV3">حذف فقط داده‌های نسخه ۴</button><button class="btn red" id="clearAllVersions">حذف داده‌های همه نسخه‌ها</button></div><p class="footer-note">این عملیات قابل بازگشت نیست، مگر اینکه فایل پشتیبان داشته باشید.</p></div>`;
+  let pendingExternal=null;
+  document.getElementById('externalFile').onchange=e=>{const f=e.target.files[0]; if(!f)return; const log=document.getElementById('externalLog'), prev=document.getElementById('externalPreview'); pendingExternal=null; document.getElementById('applyExternal').disabled=true; const r=new FileReader(); r.onload=()=>{try{const detected=detectFileData(f.name,r.result); pendingExternal=detected.data; prev.innerHTML=`<span class="pill green">فایل قابل مهاجرت است</span> نوع فایل: <b>${detected.kind}</b> | تعداد شغل: <b>${detected.jobs}</b> | تعداد سؤال: <b>${detected.questions}</b>`; log.value=JSON.stringify({file:f.name,type:detected.kind,jobs:detected.data.jobs.map(j=>({title:j.title,family:j.family,subfamily:j.subfamily,level:j.level})).slice(0,20)},null,2); document.getElementById('applyExternal').disabled=false;}catch(err){prev.innerHTML='<span class="pill red">خطا در خواندن فایل</span>'; log.value=err.message;}}; if(f.name.toLowerCase().endsWith('.xlsx')){r.onload=()=>{prev.innerHTML='<span class="pill red">XLSX مستقیم پشتیبانی نمی‌شود</span>'; log.value='لطفاً فایل را از Excel به CSV یا Excel 2003 XML / XLS ذخیره کنید، یا JSON خروجی همین ابزار را بارگذاری کنید.'}; r.readAsArrayBuffer(f);} else r.readAsText(f,'utf-8')};
+  document.getElementById('applyExternal').onclick=()=>{if(!pendingExternal)return alert('ابتدا فایل معتبر انتخاب کنید.'); const mode=document.getElementById('migrationMode').value; if(!confirm((mode==='replace'?'همه داده‌های فعلی جایگزین شود؟':'داده‌های فایل با داده‌های فعلی ادغام شود؟')+'\nقبل از اجرا پشتیبان خودکار ذخیره می‌شود.'))return; try{const rep=mergeImportedState(pendingExternal,mode); alert(`مهاجرت انجام شد.\nحالت: ${rep.mode}\nافزوده: ${rep.added}\nبه‌روزرسانی: ${rep.updated}`); location.reload()}catch(err){alert('مهاجرت انجام نشد: '+err.message)}};
+  document.querySelectorAll('.migrateOld').forEach(b=>b.onclick=e=>{const key=e.target.dataset.key; const raw=localStorage.getItem(key); if(!raw)return alert('داده‌ای برای انتقال پیدا نشد.'); if(!confirm('داده نسخه قبلی به نسخه ۴ منتقل شود؟ داده فعلی جایگزین می‌شود.'))return; try{state=normalizeImportedData(JSON.parse(raw)); save(); alert('انتقال با موفقیت انجام شد.'); location.reload()}catch(err){alert('انتقال انجام نشد: '+err.message)}});
+  document.getElementById('backupNow').onclick=()=>download('پشتیبان_استودیو_ارزش‌یابی_شغل_داتین_نسخه۴.json',JSON.stringify(state,null,2),'application/json;charset=utf-8');
+  document.getElementById('restoreFile').onchange=e=>{const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{const data=normalizeImportedData(JSON.parse(r.result)); if(confirm('داده‌های فعلی با فایل پشتیبان جایگزین شود؟')){state=data; save(); alert('بازیابی انجام شد.'); location.reload()}}catch(err){alert('فایل پشتیبان معتبر نیست: '+err.message)}}; r.readAsText(f)};
+  document.getElementById('copyData').onclick=()=>{navigator.clipboard?.writeText(JSON.stringify(state,null,2)); alert('متن داده‌ها کپی شد.')};
+  document.getElementById('clearV3').onclick=()=>{if(confirm('فقط داده نسخه ۴ حذف شود؟')){localStorage.removeItem(LS_KEY); location.reload()}};
+  document.getElementById('clearAllVersions').onclick=()=>{if(confirm('داده‌های همه نسخه‌ها حذف شود؟')){[LS_KEY,...OLD_KEYS].forEach(k=>localStorage.removeItem(k)); location.reload()}};
+}
+
+function renderIO(){document.getElementById('io').innerHTML=`<div class="card"><h2>خروجی / ورودی داده‌ها</h2><div class="btns"><button class="btn" id="exportJson">دانلود JSON</button><button class="btn secondary" id="exportCsv">دانلود CSV نمای شغل‌ها</button><button class="btn green" id="exportExcel">دانلود Excel کامل</button><label class="btn amber" for="importFile">ورود JSON</label><input id="importFile" type="file" accept=".json" style="display:none"></div><p class="hint">خروجی Excel شامل چند شیت است: Overview، Results، Answers، Dictionary و Job Library.</p><textarea id="jsonBox" class="ltr" style="margin-top:12px;min-height:260px">${esc(JSON.stringify(state,null,2))}</textarea></div>`; document.getElementById('exportJson').onclick=()=>download('dotin_job_evaluation_data.json',JSON.stringify(state,null,2),'application/json'); document.getElementById('exportCsv').onclick=()=>{const head=['Title','Family','SubFamily','Stream','Level Code','Level Title','IPE','PC','Answered']; const lines=[head.join(',')].concat(state.jobs.map(j=>{const c=calc(j);return [j.title,j.family||'',j.subfamily||'',j.stream||'',j.levelCode||'',jobLevelTitle(j),c.points.total||'',c.points.pc||'',Object.keys(j.answers||{}).length].map(csv).join(',')})); download('dotin_job_overview.csv','\ufeff'+lines.join('\n'),'text/csv;charset=utf-8')}; document.getElementById('exportExcel').onclick=()=>exportExcel(); document.getElementById('importFile').onchange=e=>{const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{state=normalizeImportedData(JSON.parse(r.result));save();alert('داده‌ها وارد شد.');location.reload()}catch(err){alert('فایل JSON معتبر نیست یا با ساختار برنامه سازگار نیست.')}}; r.readAsText(f)}}
+function xml(x){return String(x??'').replace(/[<>&"']/g,m=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[m]))}
+function excelCell(v){const isNum=typeof v==='number' && isFinite(v); return `<Cell><Data ss:Type="${isNum?'Number':'String'}">${xml(v)}</Data></Cell>`}
+function sheetXml(name, rows){return `<Worksheet ss:Name="${xml(String(name).slice(0,31))}"><Table>${rows.map(r=>`<Row>${r.map(excelCell).join('')}</Row>`).join('')}</Table></Worksheet>`}
+function factorRowsForJob(j){const c=calc(j); const subRows=['Impact Nature','Contribution','Communication','Frame','Innovation','Complexity','Knowledge','Teams','Breadth'].map(sf=>[j.title,sf,c.s[sf].degree||'',label(sf,c.s[sf].degree)||'',c.s[sf].raw===''?'':Number(c.s[sf].raw).toFixed(2),c.s[sf].confidence===''?'':Math.round(c.s[sf].confidence*100)+'%']); return subRows.concat([[j.title,'Impact Degree',c.impactDegree?Number(c.impactDegree).toFixed(1):'','', '', ''],[j.title,'Impact Points','', '', c.points.impact||'', ''],[j.title,'Communication Points','', '', c.points.communication||'', ''],[j.title,'Innovation Points','', '', c.points.innovation||'', ''],[j.title,'Knowledge Points','', '', c.points.knowledge||'', ''],[j.title,'Risk Points','', '', c.points.risk||'', ''],[j.title,'Total IPE','', '', c.points.total||'', ''],[j.title,'PC','', '', c.points.pc||'', '']])}
+function exportExcel(){const now=new Date().toISOString().slice(0,10); const overview=[['Title','Family','SubFamily','Stream','Level Code','Level Title','Company Size','Risk Type','Risk Exposure','IPE','PC','Impact Degree','Impact Nature','Contribution','Communication','Frame','Innovation','Complexity','Knowledge','Teams','Breadth','Answered']].concat(state.jobs.map(j=>{const c=calc(j); return [j.title,j.family||'',j.subfamily||'',j.stream||'',j.levelCode||'',jobLevelTitle(j),j.size||'',j.riskType||'',j.riskExposure||'',c.points.total||'',c.points.pc||'',c.impactDegree?Number(c.impactDegree).toFixed(1):'',c.s['Impact Nature'].degree||'',c.s['Contribution'].degree||'',c.s['Communication'].degree||'',c.s['Frame'].degree||'',c.s['Innovation'].degree||'',c.s['Complexity'].degree||'',c.s['Knowledge'].degree||'',c.s['Teams'].degree||'',c.s['Breadth'].degree||'',Object.keys(j.answers||{}).length+'/'+state.questions.length]})); const results=[['Job','Mercer Component','Degree/Key','Mercer Level','Raw/Point','Confidence']].concat(state.jobs.flatMap(factorRowsForJob)); const answers=[['Job','Q','Section','SubFactor','Question','Answer','Score','Weight','Mercer Equivalent','Evidence']].concat(state.jobs.flatMap(j=>state.questions.map(q=>{const ans=j.answers?.[q.id]||''; const opt=q.options.find(o=>o[0]===ans); return [j.title,q.id,q.section,q.sub,q.text,ans,opt?opt[1]:'',q.weight||'',opt?label(q.sub,opt[1]):'',j.evidence?.[q.id]||'']}))); const dictionary=[['Q','Section','SubFactor','Weight','Question','Option','Score','Mercer Equivalent']].concat(state.questions.flatMap(q=>q.options.map(o=>[q.id,q.section,q.sub,q.weight||'',q.text,o[0],o[1],label(q.sub,o[1])]))); const jobs=[['ID','Title','Family','SubFamily','Stream','Level Code','Level Title','Company Size','Risk Type','Risk Exposure']].concat(state.jobs.map(j=>[j.id,j.title,j.family||'',j.subfamily||'',j.stream||'',j.levelCode||'',jobLevelTitle(j),j.size||'',j.riskType||'',j.riskExposure||''])); const alignment=[['Job','Factor','Baseline Degree','Manager Degree','Gap','Status']].concat(state.jobs.flatMap(j=>{const base=ensureBaseline(j), mgr=managerDegrees(j); return alignmentFactors.map(f=>{const b=Number(base[f.key]), m=mgr[f.key], g=(m===''||m==null||isNaN(Number(m)))?'':Math.abs(Number(m)-b); return [j.title,f.label,b,m===''?'':m,g===''?'':Number(g.toFixed(1)),gapLabel(g)]})})); const workbook=`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40"><Styles><Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Top" ss:WrapText="1"/><Font ss:FontName="Tahoma" ss:Size="10"/></Style></Styles>${sheetXml('Overview',overview)}${sheetXml('Results',results)}${sheetXml('Answers',answers)}${sheetXml('Dictionary',dictionary)}${sheetXml('Job Library',jobs)}${sheetXml('Alignment',alignment)}</Workbook>`; download(`dotin_job_evaluation_export_${now}.xls`,workbook,'application/vnd.ms-excel;charset=utf-8')}
+function csv(x){x=String(x??'');return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x} function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function renderGuide(){document.getElementById('guide').innerHTML=`<div class="card"><h2>راهنما</h2><p>این نسخه یک ابزار HTML مستقل است و بدون سرور اجرا می‌شود. شغل‌ها، سؤال‌ها، گزینه‌ها و پاسخ‌ها داخل LocalStorage مرورگر ذخیره می‌شوند.</p><table><tr><th>بخش</th><th>کاربرد</th></tr><tr><td>ارزیابی شغل</td><td>انتخاب شغل، پاسخ به سؤال‌ها و مشاهده خروجی IPE/PC</td></tr><tr><td>نمای کل شغل‌ها</td><td>مقایسه سریع همه شغل‌ها از نظر IPE، PC، وضعیت تکمیل و انطباق</td></tr><tr><td>انطباق با شناسنامه</td><td>نمایش نمودار خطی مقایسه پروفایل شناسنامه‌ای با ارزیابی مدیر و جدول اختلاف مولفه‌ها</td></tr><tr><td>مدیریت شغل‌ها</td><td>افزودن، حذف، ویرایش یا کپی شغل‌ها و انتخاب پروفایل مرجع شناسنامه‌ای با عبارت Mercer</td></tr><tr><td>مدیریت سؤالات</td><td>ویرایش متن سؤال، SubFactor، وزن و گزینه‌های پاسخ</td></tr><tr><td>دیکشنری</td><td>نمای تجمیعی از نگاشت هر گزینه به Mercer</td></tr><tr><td>مدیریت داده‌ها و مهاجرت</td><td>انتقال داده از نسخه‌های قبلی، بارگذاری فایل از سیستم دیگر، پشتیبان‌گیری، بازیابی و پاک‌سازی کنترل‌شده</td></tr><tr><td>خروجی/ورودی</td><td>تهیه فایل پشتیبان JSON، خروجی CSV و خروجی Excel چندشیتی</td></tr></table></div>`}
+renderEval();
+</script>
+</body>
+</html>
