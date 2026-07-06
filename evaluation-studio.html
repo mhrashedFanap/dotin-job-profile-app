@@ -72,6 +72,8 @@
 </div>
 <script>
 const LS_KEY='dotin_jves_v4_4_levels_2026_07';
+const DB_CFG_KEY=LS_KEY+'_supabase_config';
+const DB_TABLE='dotin_app_state';
 const OLD_KEYS=['dotin_jves_v4_file_migration_2026_07','dotin_jves_v3_data_management_2026_07','dotin_jves_v2_alignment_2026_07','dotin_jves_v1_2026_07'];
 const subfactorLabels={
  'Impact Nature':{1:'Delivery',2:'Operational',3:'Tactical',4:'Strategic',5:'Visionary'},
@@ -136,7 +138,60 @@ function defaultJob(){return {id:uid(),title:'کارشناس سرمایه انس
 function defaultState(){return {jobs:[defaultJob()],questions:structuredClone(defaultQuestions),selectedJobId:null,settings:{halfStep:true,levels:defaultLevelConfig()}}}
 let state=load(); if(!state.selectedJobId&&state.jobs[0]) state.selectedJobId=state.jobs[0].id;
 function load(){try{const raw=localStorage.getItem(LS_KEY);return raw?JSON.parse(raw):defaultState()}catch(e){return defaultState()}}
-function save(){localStorage.setItem(LS_KEY,JSON.stringify(state))}
+let dbStatus='Local browser storage';
+let dbSaveTimer=null;
+function dbConfig(){try{return JSON.parse(localStorage.getItem(DB_CFG_KEY)||'{}')}catch(e){return {}}}
+function setDbConfig(cfg){localStorage.setItem(DB_CFG_KEY,JSON.stringify(cfg||{}))}
+function dbEnabled(){const c=dbConfig(); return !!(c.url&&c.anonKey)}
+function dbRecordId(){return dbConfig().recordId||'default'}
+function save(){localStorage.setItem(LS_KEY,JSON.stringify(state)); queueDbSave()}
+function queueDbSave(){if(!dbEnabled())return; clearTimeout(dbSaveTimer); dbSaveTimer=setTimeout(()=>pushStateToDatabase(false),900)}
+async function supabaseRequest(method,path,body){
+  const c=dbConfig();
+  const base=String(c.url||'').replace(/\/+$/,'');
+  const res=await fetch(`${base}/rest/v1/${path}`,{
+    method,
+    headers:{
+      apikey:c.anonKey,
+      authorization:`Bearer ${c.anonKey}`,
+      'content-type':'application/json',
+      prefer:'return=representation,resolution=merge-duplicates'
+    },
+    body:body===undefined?undefined:JSON.stringify(body)
+  });
+  if(!res.ok) throw new Error((await res.text())||res.statusText);
+  if(res.status===204) return null;
+  const text=await res.text();
+  return text?JSON.parse(text):null;
+}
+async function loadStateFromDatabase(){
+  if(!dbEnabled()) throw new Error('Supabase is not configured.');
+  dbStatus='Loading from database...';
+  const rows=await supabaseRequest('GET',`${DB_TABLE}?id=eq.${encodeURIComponent(dbRecordId())}&select=id,data,updated_at`);
+  if(rows&&rows[0]&&rows[0].data){
+    state=normalizeImportedData(rows[0].data);
+    localStorage.setItem(LS_KEY,JSON.stringify(state));
+    dbStatus='Database loaded';
+    render(activeView());
+    return true;
+  }
+  dbStatus='No database row yet';
+  return false;
+}
+async function pushStateToDatabase(showAlert=true){
+  if(!dbEnabled()) return false;
+  try{
+    await supabaseRequest('POST',`${DB_TABLE}?on_conflict=id`,{id:dbRecordId(),data:state,updated_at:new Date().toISOString()});
+    dbStatus='Database synced';
+    if(showAlert) alert('Database sync completed.');
+    return true;
+  }catch(err){
+    dbStatus='Database sync failed: '+err.message;
+    if(showAlert) alert(dbStatus);
+    return false;
+  }
+}
+function activeView(){const el=document.querySelector('.view:not(.hidden)');return el?el.id:'eval'}
 function roundHalf(x){return Math.round(x*2)/2}
 function interp(table,x,y){if(x===''||y===''||x==null||y==null)return ''; x=Number(x);y=Number(y); const x1=Math.max(1,Math.floor(x)), x2=Math.min(table.length,Math.ceil(x)); const y1=Math.max(1,Math.floor(y)), y2=Math.min(table[0].length,Math.ceil(y)); const v11=table[x1-1][y1-1],v12=table[x1-1][y2-1],v21=table[x2-1][y1-1],v22=table[x2-1][y2-1]; if(x1===x2&&y1===y2)return v11; if(x1===x2)return v11+(y-y1)*(v12-v11)/(y2-y1); if(y1===y2)return v11+(x-x1)*(v21-v11)/(x2-x1); return v11+(x-x1)*(v21-v11)/(x2-x1)+(y-y1)*(v12-v11)/(y2-y1)+(x-x1)*(y-y1)*(v22-v21-v12+v11)/((x2-x1)*(y2-y1));}
 function scoreSub(job, sub){const qs=state.questions.filter(q=>q.sub===sub); let sw=0,ss=0,vals=[]; for(const q of qs){const ans=job.answers[q.id]; const opt=q.options.find(o=>o[0]===ans); if(opt){sw+=Number(q.weight||0); ss+=Number(opt[1])*Number(q.weight||0); vals.push(Number(opt[1]));}} if(!sw)return {raw:'',degree:'',confidence:''}; const raw=ss/sw, degree=state.settings.halfStep?roundHalf(raw):Math.round(raw); let conf=''; if(vals.length>1){const max=Math.max(...vals), min=Math.min(...vals); const subMax=Math.max(...qs.flatMap(q=>q.options.map(o=>Number(o[1])))); conf=Math.max(0,1-(max-min)/Math.max(1,subMax-1));} return {raw,degree,confidence:conf};}
@@ -212,9 +267,15 @@ function renderOptionEditor(qid){const q=state.questions.find(x=>String(x.id)===
 function renderDictionary(){document.getElementById('dictionary').innerHTML=`<div class="card"><h2>دیکشنری فعلی سؤال‌ها و گزینه‌ها</h2><div class="scroll"><table><thead><tr><th>Q</th><th>SubFactor</th><th>سؤال</th><th>گزینه</th><th>Score</th><th>Mercer Equivalent</th></tr></thead><tbody>${state.questions.flatMap(q=>q.options.map(o=>`<tr><td>${q.id}</td><td>${esc(q.sub)}</td><td>${esc(q.text)}</td><td>${esc(o[0])}</td><td>${o[1]}</td><td>${esc(label(q.sub,o[1]))}</td></tr>`)).join('')}</tbody></table></div></div>`}
 function renderSettings(){
   const levelRows=levelConfig().map((l,i)=>`<tr><td><input data-i="${i}" data-f="code" value="${esc(l.code)}"></td><td><input data-i="${i}" data-f="professional" value="${esc(l.professional||'')}"></td><td><input data-i="${i}" data-f="management" value="${esc(l.management||'')}"></td><td><input type="number" data-i="${i}" data-f="minPc" value="${esc(l.minPc??'')}"></td><td><input type="number" data-i="${i}" data-f="maxPc" value="${esc(l.maxPc??'')}"></td><td><button class="btn small red delLevel" data-i="${i}">حذف</button></td></tr>`).join('');
+  const cfg=dbConfig();
   document.getElementById('settings').innerHTML=`<div class="card"><h2>تنظیمات موتور مرسر</h2><div class="grid g3"><div><label>محاسبه نیم‌پله</label><select id="half"><option value="true" ${state.settings.halfStep?'selected':''}>فعال</option><option value="false" ${!state.settings.halfStep?'selected':''}>غیرفعال</option></select></div></div><p class="hint">جداول امتیازدهی مرسر داخل موتور محاسباتی فایل قرار دارد.</p></div>
+  <div class="card"><h2>اتصال دیتابیس</h2><p class="hint">برای ذخیره مرکزی، پروژه Supabase را اینجا تنظیم کنید. تا قبل از تنظیم دیتابیس، برنامه مثل قبل در مرورگر ذخیره می‌کند.</p><div class="grid g3"><div><label>Supabase URL</label><input id="dbUrl" class="ltr" placeholder="https://xxxx.supabase.co" value="${esc(cfg.url||'')}"></div><div><label>Anon public key</label><input id="dbAnonKey" class="ltr" placeholder="eyJ..." value="${esc(cfg.anonKey||'')}"></div><div><label>Record ID</label><input id="dbRecordId" class="ltr" value="${esc(cfg.recordId||'default')}"></div></div><div class="btns" style="margin-top:12px"><button class="btn green" id="saveDbConfig">ذخیره تنظیمات دیتابیس</button><button class="btn" id="loadDbNow">دریافت از دیتابیس</button><button class="btn secondary" id="pushDbNow">ارسال داده فعلی</button><button class="btn red" id="clearDbConfig">غیرفعال‌سازی دیتابیس</button></div><p class="footer-note">وضعیت: <span id="dbStatusText">${esc(dbStatus)}</span></p></div>
   <div class="card"><h2>مدیریت سطوح شغلی داتین</h2><p class="hint">کد سطح، عنوان مسیر تخصصی، عنوان مسیر مدیریتی و بازه پیشنهادی PC قابل ویرایش است. این تنظیمات در مدیریت شغل‌ها و گزارش‌ها استفاده می‌شود.</p><div class="btns"><button class="btn green" id="addLevel">افزودن سطح</button><button class="btn amber" id="resetLevels">بازگشت سطوح پیش‌فرض</button></div><div class="scroll" style="margin-top:12px"><table><thead><tr><th>کد</th><th>عنوان تخصصی</th><th>عنوان مدیریتی</th><th>PC از</th><th>PC تا</th><th>عملیات</th></tr></thead><tbody>${levelRows}</tbody></table></div></div>
   <div class="card danger-zone"><h3>بازنشانی کامل</h3><button class="btn red" id="resetAll">حذف همه داده‌ها و بازگشت به نسخه اولیه</button></div>`;
+  document.getElementById('saveDbConfig').onclick=()=>{setDbConfig({url:document.getElementById('dbUrl').value.trim(),anonKey:document.getElementById('dbAnonKey').value.trim(),recordId:document.getElementById('dbRecordId').value.trim()||'default'});dbStatus='تنظیمات دیتابیس ذخیره شد';renderSettings()};
+  document.getElementById('loadDbNow').onclick=async()=>{try{const ok=await loadStateFromDatabase();alert(ok?'داده از دیتابیس دریافت شد.':'رکوردی در دیتابیس پیدا نشد. ابتدا ارسال داده فعلی را بزنید.')}catch(err){alert('دریافت از دیتابیس ناموفق بود: '+err.message)}};
+  document.getElementById('pushDbNow').onclick=()=>pushStateToDatabase(true);
+  document.getElementById('clearDbConfig').onclick=()=>{if(confirm('اتصال دیتابیس در این مرورگر غیرفعال شود؟')){localStorage.removeItem(DB_CFG_KEY);dbStatus='Local browser storage';renderSettings()}};
   document.getElementById('half').onchange=e=>{state.settings.halfStep=e.target.value==='true';save();renderSettings()};
   document.querySelectorAll('#settings input[data-f]').forEach(inp=>inp.oninput=e=>{const levels=levelConfig(); const l=levels[Number(e.target.dataset.i)]; const f=e.target.dataset.f; l[f]=(f==='minPc'||f==='maxPc')?Number(e.target.value):e.target.value; state.settings.levels=levels; state.jobs.forEach(j=>{if(j.levelCode===l.code)j.level=jobLevelTitle(j)}); save()});
   document.getElementById('addLevel').onclick=()=>{state.settings.levels=levelConfig(); const n=state.settings.levels.length+1; state.settings.levels.push({code:'L'+n,professional:'سطح جدید',management:'سطح جدید',minPc:40,maxPc:99}); save(); renderSettings()};
@@ -383,6 +444,9 @@ function exportExcel(){const now=new Date().toISOString().slice(0,10); const ove
 function csv(x){x=String(x??'');return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x} function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function renderGuide(){document.getElementById('guide').innerHTML=`<div class="card"><h2>راهنما</h2><p>این نسخه یک ابزار HTML مستقل است و بدون سرور اجرا می‌شود. شغل‌ها، سؤال‌ها، گزینه‌ها و پاسخ‌ها داخل LocalStorage مرورگر ذخیره می‌شوند.</p><table><tr><th>بخش</th><th>کاربرد</th></tr><tr><td>ارزیابی شغل</td><td>انتخاب شغل، پاسخ به سؤال‌ها و مشاهده خروجی IPE/PC</td></tr><tr><td>نمای کل شغل‌ها</td><td>مقایسه سریع همه شغل‌ها از نظر IPE، PC، وضعیت تکمیل و انطباق</td></tr><tr><td>انطباق با شناسنامه</td><td>نمایش نمودار خطی مقایسه پروفایل شناسنامه‌ای با ارزیابی مدیر و جدول اختلاف مولفه‌ها</td></tr><tr><td>مدیریت شغل‌ها</td><td>افزودن، حذف، ویرایش یا کپی شغل‌ها و انتخاب پروفایل مرجع شناسنامه‌ای با عبارت Mercer</td></tr><tr><td>مدیریت سؤالات</td><td>ویرایش متن سؤال، SubFactor، وزن و گزینه‌های پاسخ</td></tr><tr><td>دیکشنری</td><td>نمای تجمیعی از نگاشت هر گزینه به Mercer</td></tr><tr><td>مدیریت داده‌ها و مهاجرت</td><td>انتقال داده از نسخه‌های قبلی، بارگذاری فایل از سیستم دیگر، پشتیبان‌گیری، بازیابی و پاک‌سازی کنترل‌شده</td></tr><tr><td>خروجی/ورودی</td><td>تهیه فایل پشتیبان JSON، خروجی CSV و خروجی Excel چندشیتی</td></tr></table></div>`}
 renderEval();
+if(dbEnabled()){
+  loadStateFromDatabase().catch(err=>{dbStatus='Database load failed: '+err.message});
+}
 </script>
 </body>
 </html>
